@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   GitMerge, 
   LayoutDashboard, 
@@ -12,7 +13,9 @@ import {
   Sparkles, 
   ArrowRight, 
   Lock,
-  GitPullRequest
+  GitPullRequest,
+  Menu,
+  X
 } from "lucide-react";
 
 const fadeIn = {
@@ -31,6 +34,8 @@ const stagger = {
 };
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen font-sans selection:bg-neutral-800 selection:text-white">
       {/* Background Grid */}
@@ -39,13 +44,15 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-lg">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between relative">
+          <div className="flex items-center gap-3 relative z-50">
             <Image src="/kf_logo.webp" alt="Kiloforge Logo" width={32} height={32} className="rounded-md shadow-lg" />
             <span className="font-semibold text-lg tracking-tight">Kiloforge</span>
           </div>
-          <div className="flex items-center gap-6 text-sm font-medium text-neutral-400">
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
             <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
@@ -53,7 +60,62 @@ export default function Home() {
               GitHub
             </a>
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden relative z-50 p-2 -mr-2 text-neutral-400 hover:text-white transition-colors focus:outline-none"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation Dropdown */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="absolute top-full left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/10 md:hidden overflow-hidden shadow-2xl"
+            >
+              <div className="flex flex-col px-6 py-6 gap-6 text-base font-medium text-neutral-300">
+                <a 
+                  href="#features" 
+                  className="hover:text-white transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Features
+                </a>
+                <a 
+                  href="#how-it-works" 
+                  className="hover:text-white transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  How it Works
+                </a>
+                <a 
+                  href="#architecture" 
+                  className="hover:text-white transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Architecture
+                </a>
+                <a 
+                  href="https://github.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-white flex items-center justify-center gap-2 bg-white/10 px-4 py-3 rounded-xl hover:bg-white/20 transition-all border border-white/10 mt-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  GitHub
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
