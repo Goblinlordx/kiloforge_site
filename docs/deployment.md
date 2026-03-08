@@ -43,17 +43,28 @@ Before making the CloudFront distribution, you need an SSL cert for your custom 
 6. **Allowed HTTP methods:** `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`. (Needed if you ever add Next.js API routes or server actions).
 7. **Cache key and origin requests:**
    - Select **Cache policy and origin request policy**.
-   - **Cache policy:** `CachingOptimized` (or create a custom one if you have dynamic SSR pages that shouldn't be cached).
+   - **Cache policy:** `CachingDisabled` (This ensures CloudFront always fetches the freshest HTML from Vercel for your pages).
    - **Origin request policy:** Create a new custom policy:
      - Name: `VercelProxyPolicy`
-     - **Headers: None** (This is the magic trick! We specifically do _not_ want to forward the `Host` header, so Vercel gets the `.vercel.app` Host header and serves the site instead of throwing a 404 because it doesn't recognize `kiloforge.com`).
+     - **Headers: None** (This is the magic trick! We specifically do _not_ want to forward the `Host` header, so Vercel gets the `.vercel.app` Host header and serves the site instead of throwing a 404).
      - Query strings: **All**
      - Cookies: **All**
      - Attach this new policy.
 8. **Web Application Firewall (WAF):** Disable (unless you want to pay for it).
 9. **Alternate domain name (CNAME):** Click Add item, and enter `kiloforge.com`. Add another item for `www.kiloforge.com`.
 10. **Custom SSL certificate:** Select the ACM certificate you created in Step 2.
-11. Click **Create distribution**.
+11. Click **Create distribution** and wait for it to deploy.
+12. **CRITICAL CACHE SETUP:** Once created, click on the **Behaviors** tab in your distribution.
+    - Click **Create behavior**.
+    - Path pattern: `/_next/*`
+    - Origin: Select your Vercel origin.
+    - Viewer Protocol Policy: Redirect HTTP to HTTPS
+    - Cache key and origin requests: Select **Cache policy and origin request policy**
+    - Cache policy: `CachingOptimized`
+    - Origin request policy: `VercelProxyPolicy`
+    - Click **Create**.
+
+    _(Next.js already hashes the filenames of all JavaScript, CSS, and image assets in the `/_next/` folder. This behavior tells CloudFront to cache them aggressively at the edge for blazing fast load times globally, while your default `_` behavior ensures CloudFront always serves the newest, freshest HTML layout for those assets!).\*
 
 ## Step 4: Point Route 53 to CloudFront
 
@@ -73,18 +84,3 @@ Before making the CloudFront distribution, you need an SSL cert for your custom 
 Wait about 5-10 minutes for the CloudFront distribution to finish deploying. Then, try visiting `https://kiloforge.com`!
 
 AWS CloudFront will safely proxy requests to Vercel. Because we aren't forwarding the Host header, Vercel never knows that `kiloforge.com` is accessing the site, and completely bypasses any Custom Domain restrictions on your Vercel account.
-
-## Step 6: Automating Cache Invalidation (GitHub Actions)
-
-Because CloudFront is caching your Next.js application, pushing new code to your repository might initially not update for visitors until the CloudFront cache expires (defaults to 24 hours under the `CachingOptimized` policy).
-
-To automatically clear the CloudFront cache the moment Vercel successfully finishes deploying your site, we've included a **GitHub Action** (`.github/workflows/cloudfront-invalidation.yml`).
-
-1. Go to your **AWS IAM Console** and create a new programmatic user that has the `cloudfront:CreateInvalidation` permission.
-2. Go to your repository settings on **GitHub** -> **Secrets and variables** -> **Actions**.
-3. Add the following repository secrets:
-   - `AWS_ACCESS_KEY_ID` (from the new IAM user)
-   - `AWS_SECRET_ACCESS_KEY` (from the new IAM user)
-   - `CLOUDFRONT_DISTRIBUTION_ID` (looks like `E1ABCDEF2GHIJK`)
-
-Now, whenever Vercel successfully finishes deploying your code to the `Production` environment, Vercel triggers a webhook back to GitHub. This triggers the GitHub Action to instantly invalidate the `/*` path in CloudFront, making your new Next.js deployment live!
