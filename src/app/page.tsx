@@ -13,10 +13,10 @@ import {
   HardDrive, 
   Sparkles, 
   ArrowRight, 
-  Lock,
   GitPullRequest,
   Menu,
-  X
+  X,
+  User
 } from "lucide-react";
 
 const fadeIn = {
@@ -270,113 +270,125 @@ export default function Home() {
                <p className="text-lg text-neutral-400">A robust multi-server orchestration system running directly on your machine.</p>
              </motion.div>
 
-             <div className="flex flex-col gap-6 relative">
-               {/* Vertical Connection Line */}
-               <div className="absolute left-1/2 top-4 bottom-4 w-px bg-gradient-to-b from-white/20 via-white/5 to-transparent hidden md:block"></div>
-
-               {/* Layer 1: Orchestrator Server */}
-               <motion.div variants={fadeIn} className="glass-panel p-8 rounded-2xl border border-cyan-500/20 relative z-10 bg-black/60 shadow-[0_0_40px_rgba(6,182,212,0.05)]">
-                 <div className="flex items-start justify-between mb-4">
-                   <div className="flex items-center gap-3">
-                     <div className="p-2.5 bg-cyan-500/10 rounded-lg text-cyan-400">
-                       <TerminalSquare className="w-6 h-6" />
+             <div className="grid md:grid-cols-3 gap-6 relative mt-12">
+               {/* Left Column: Inputs & Interfaces */}
+               <div className="flex flex-col gap-6 justify-center">
+                 {/* The Kiloforger (Human) */}
+                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-amber-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(245,158,11,0.05)] hover:border-amber-500/40 transition-colors">
+                   <div className="flex items-start gap-4 mb-3">
+                     <div className="p-2.5 bg-amber-500/10 rounded-lg text-amber-500 shrink-0">
+                       <User className="w-6 h-6" />
                      </div>
                      <div>
-                       <h3 className="text-xl font-bold font-mono text-cyan-100">Orchestrator Core</h3>
-                       <p className="text-sm text-neutral-400 font-mono">localhost:3001</p>
+                       <h3 className="text-lg font-bold font-mono text-amber-100">The Kiloforger</h3>
+                       <p className="text-xs text-neutral-400 font-mono">Human Director</p>
                      </div>
                    </div>
-                   <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded-full border border-cyan-400/20">
-                     <HardDrive className="w-3 h-3" /> Central Proxy
+                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Directs tickets and tracks</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Final PR review and merge</p>
                    </div>
-                 </div>
-                 <div className="text-neutral-300 text-sm pl-[3.25rem] grid sm:grid-cols-2 gap-y-3 gap-x-6">
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Serves Dashboard & Proxies Gitea</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Agent spawn, suspend, resume</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Dev-Reviewer cycle routing</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Quotas & budget enforcement</p>
-                   <p className="flex items-center gap-2 col-span-full"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Scoped lock API (Merge Context Serialization)</p>
-                 </div>
-               </motion.div>
+                 </motion.div>
 
-               {/* Connector Arrow for Mobile */}
-               <div className="flex justify-center md:hidden text-white/20 py-2">
-                 <ArrowRight className="w-5 h-5 rotate-90" />
-               </div>
-
-               {/* Layer 2: Claude Code Swarm */}
-               <motion.div variants={fadeIn} className="glass-panel p-8 rounded-2xl border border-emerald-500/20 relative z-10 bg-black/60 shadow-[0_0_40px_rgba(52,211,153,0.05)] md:ml-12 mt-2">
-                 <div className="flex items-start justify-between mb-4">
-                   <div className="flex items-center gap-3">
-                     <div className="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400">
-                       <TerminalSquare className="w-6 h-6" />
-                     </div>
-                     <div>
-                       <h3 className="text-xl font-bold font-mono text-emerald-100">Claude Code Swarm</h3>
-                       <p className="text-sm text-neutral-400 font-mono">Managed local CLI agents</p>
-                     </div>
-                   </div>
-                   <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full border border-emerald-400/20">
-                     <Lock className="w-3 h-3" /> Auto-Scaling
-                   </div>
+                 {/* Connector Arrow for Mobile */}
+                 <div className="flex justify-center md:hidden text-white/10 py-1">
+                   <ArrowRight className="w-5 h-5 rotate-90" />
                  </div>
-                 <div className="text-neutral-300 text-sm pl-[3.25rem] space-y-2">
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Dynamically instantiated and managed by the Orchestrator</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Execute autonomously inside isolated local pooled worktrees</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Integrate directly with the forging process via specialized custom Skills</p>
-                 </div>
-               </motion.div>
 
-               {/* Connector Arrow for Mobile */}
-               <div className="flex justify-center md:hidden text-white/20 py-2">
-                 <ArrowRight className="w-5 h-5 rotate-90" />
-               </div>
-
-               {/* Layer 3: Dashboard */}
-               <motion.div variants={fadeIn} className="glass-panel p-8 rounded-2xl border border-indigo-500/20 relative z-10 bg-black/60 shadow-[0_0_40px_rgba(99,102,241,0.05)] md:ml-24 mt-2">
-                 <div className="flex items-start justify-between mb-4">
-                   <div className="flex items-center gap-3">
-                     <div className="p-2.5 bg-indigo-500/10 rounded-lg text-indigo-400">
+                 {/* Dashboard UI */}
+                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-indigo-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(99,102,241,0.05)] hover:border-indigo-500/40 transition-colors">
+                   <div className="flex items-start gap-4 mb-3">
+                     <div className="p-2.5 bg-indigo-500/10 rounded-lg text-indigo-400 shrink-0">
                        <LayoutDashboard className="w-6 h-6" />
                      </div>
                      <div>
-                       <h3 className="text-xl font-bold font-mono text-indigo-100">Dashboard UI</h3>
-                       <p className="text-sm text-neutral-400 font-mono">Served from Orchestrator</p>
+                       <h3 className="text-lg font-bold font-mono text-indigo-100">Dashboard UI</h3>
+                       <p className="text-xs text-neutral-400 font-mono">Observability Port</p>
                      </div>
                    </div>
-                 </div>
-                 <div className="text-neutral-300 text-sm pl-[3.25rem] space-y-2">
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Agent status, limits, and live cost calculation</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Log streaming and real-time SSE updates</p>
-                 </div>
-               </motion.div>
+                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Live agent log streaming</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Track quota and cost metrics</p>
+                   </div>
+                 </motion.div>
+               </div>
 
                {/* Connector Arrow for Mobile */}
-               <div className="flex justify-center md:hidden text-white/20 py-2">
+               <div className="flex justify-center md:hidden text-white/10 py-1">
                  <ArrowRight className="w-5 h-5 rotate-90" />
                </div>
 
-               {/* Layer 4: Gitea */}
-               <motion.div variants={fadeIn} className="glass-panel p-8 rounded-2xl border border-rose-500/20 relative z-10 bg-black/60 shadow-[0_0_40px_rgba(244,63,94,0.05)] md:ml-36 mt-2">
-                 <div className="flex items-start justify-between mb-4">
-                   <div className="flex items-center gap-3">
-                     <div className="p-2.5 bg-rose-500/10 rounded-lg text-rose-400">
+               {/* Center Column: Orchestrator */}
+               <div className="flex flex-col gap-6 justify-center relative md:mx-4">
+                 {/* Desktop horizontal connectors */}
+                 <div className="hidden md:block absolute top-[25%] -left-8 right-1/2 h-px bg-gradient-to-r from-amber-500/20 to-cyan-500/50 -z-10"></div>
+                 <div className="hidden md:block absolute top-[75%] -left-8 right-1/2 h-px bg-gradient-to-r from-indigo-500/20 to-cyan-500/50 -z-10"></div>
+                 <div className="hidden md:block absolute top-[25%] left-1/2 -right-8 h-px bg-gradient-to-l from-emerald-500/20 to-cyan-500/50 -z-10"></div>
+                 <div className="hidden md:block absolute top-[75%] left-1/2 -right-8 h-px bg-gradient-to-l from-rose-500/20 to-cyan-500/50 -z-10"></div>
+
+                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border-2 border-cyan-500/30 relative z-10 bg-black/80 shadow-[0_0_50px_rgba(6,182,212,0.15)] transform md:scale-105">
+                   <div className="flex flex-col items-center mb-6 text-center">
+                     <div className="p-4 bg-cyan-500/10 rounded-xl text-cyan-400 mb-4 ring-1 ring-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                       <Activity className="w-8 h-8" />
+                     </div>
+                     <h3 className="text-2xl font-bold font-mono text-cyan-100">Orchestrator</h3>
+                     <p className="text-sm text-cyan-400/80 font-mono mt-1">Local Control Plane</p>
+                   </div>
+                   <div className="text-neutral-300 text-xs space-y-2 bg-white/5 p-4 rounded-xl border border-white/5">
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Central system router proxy</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Agent lifecycle management</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Dev-Reviewer cycle routing</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Merge context serialization</p>
+                   </div>
+                 </motion.div>
+               </div>
+
+               {/* Connector Arrow for Mobile */}
+               <div className="flex justify-center md:hidden text-white/10 py-1">
+                 <ArrowRight className="w-5 h-5 rotate-90" />
+               </div>
+
+               {/* Right Column: Agents & Forge */}
+               <div className="flex flex-col gap-6 justify-center">
+                 {/* Claude Code Swarm */}
+                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-emerald-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(52,211,153,0.05)] hover:border-emerald-500/40 transition-colors">
+                   <div className="flex items-start gap-4 mb-3">
+                     <div className="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400 shrink-0">
+                       <TerminalSquare className="w-6 h-6" />
+                     </div>
+                     <div>
+                       <h3 className="text-lg font-bold font-mono text-emerald-100">Cloud Agents</h3>
+                       <p className="text-xs text-neutral-400 font-mono">Claude Code Swarm</p>
+                     </div>
+                   </div>
+                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Execute autonomously in worktrees</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Utilize specialized project skills</p>
+                   </div>
+                 </motion.div>
+
+                 {/* Connector Arrow for Mobile */}
+                 <div className="flex justify-center md:hidden text-white/10 py-1">
+                   <ArrowRight className="w-5 h-5 rotate-90" />
+                 </div>
+
+                 {/* Gitea Backend */}
+                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-rose-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(244,63,94,0.05)] hover:border-rose-500/40 transition-colors">
+                   <div className="flex items-start gap-4 mb-3">
+                     <div className="p-2.5 bg-rose-500/10 rounded-lg text-rose-400 shrink-0">
                        <GitMerge className="w-6 h-6" />
                      </div>
                      <div>
-                       <h3 className="text-xl font-bold font-mono text-rose-100">Gitea Backend</h3>
-                       <p className="text-sm text-neutral-400 font-mono">Proxied via Orchestrator</p>
+                       <h3 className="text-lg font-bold font-mono text-rose-100">Gitea Backend</h3>
+                       <p className="text-xs text-neutral-400 font-mono">Private Forge</p>
                      </div>
                    </div>
-                   <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full border border-emerald-400/20">
-                     <Activity className="w-3 h-3" /> Webhooks Emit
+                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Local git repos and PRs</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Fires webhook events to core</p>
                    </div>
-                 </div>
-                 <div className="text-neutral-300 text-sm pl-[3.25rem] space-y-2">
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Git repos, PRs, and code review across multiple projects</p>
-                   <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Fires Events directly back to the Orchestrator daemon</p>
-                 </div>
-               </motion.div>
+                 </motion.div>
+               </div>
              </div>
           </motion.div>
 
