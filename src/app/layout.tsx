@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = "https://kiloforge.dev"\;
+const BASE_URL = "https://kiloforge.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
