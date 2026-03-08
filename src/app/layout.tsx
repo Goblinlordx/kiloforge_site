@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Kiloforge",
     images: [
       {
-        url: "/og_image.png",
+        url: "https://kiloforge.com/og_image.png",
         width: 1200,
         height: 630,
         alt: "Kiloforge AI Swarms",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kiloforge | Forge code at the speed of thought",
     description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
-    images: ["/og_image.png"],
+    images: ["https://kiloforge.com/og_image.png"],
     creator: "@kiloforge",
   },
   icons: {
