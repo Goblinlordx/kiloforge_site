@@ -181,7 +181,7 @@ export default function Home() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={stagger}
-            className="mt-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="mt-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 scroll-mt-32"
             id="features"
           >
             <FeatureCard 
@@ -222,7 +222,7 @@ export default function Home() {
              whileInView="visible"
              viewport={{ once: true }}
              variants={stagger}
-             className="mt-40 border-t border-white/10 pt-32 text-center"
+             className="mt-40 border-t border-white/10 pt-32 text-center scroll-mt-32"
              id="how-it-works"
           >
              <motion.h2 variants={fadeIn} className="text-4xl md:text-5xl font-bold mb-16 tracking-tight">How it Works</motion.h2>
@@ -262,7 +262,7 @@ export default function Home() {
              whileInView="visible"
              viewport={{ once: true }}
              variants={stagger}
-             className="mt-40 pt-12 md:max-w-4xl mx-auto"
+             className="mt-40 pt-12 md:max-w-4xl mx-auto scroll-mt-32"
              id="architecture"
           >
              <motion.div variants={fadeIn} className="text-center mb-16">
