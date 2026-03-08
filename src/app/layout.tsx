@@ -24,21 +24,11 @@ export const metadata: Metadata = {
     description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
     url: "https://kiloforge.com",
     siteName: "Kiloforge",
-    images: [
-      {
-        url: "https://kiloforge.com/og_image.png",
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: "Kiloforge AI Swarms",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kiloforge | Forge code at the speed of thought",
     description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
-    images: ["https://kiloforge.com/og_image.png"],
     creator: "@kiloforge",
   },
   icons: {
