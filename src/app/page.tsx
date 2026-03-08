@@ -56,7 +56,7 @@ export default function Home() {
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
             <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
+            <a href="https://github.com/kiloforge" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
               GitHub
             </a>
           </div>
@@ -104,7 +104,7 @@ export default function Home() {
                   Architecture
                 </a>
                 <a 
-                  href="https://github.com" 
+                  href="https://github.com/kiloforge" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-white flex items-center justify-center gap-2 bg-white/10 px-4 py-3 rounded-xl hover:bg-white/20 transition-all border border-white/10 mt-2"
@@ -157,13 +157,12 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <pre className="glass-panel px-6 py-4 rounded-xl flex items-center gap-3 text-sm font-mono text-neutral-300 border border-white/10 shadow-2xl">
+              <pre className="glass-panel px-6 py-4 rounded-xl flex items-center gap-3 text-sm font-mono text-neutral-300 border border-white/10 shadow-2xl opacity-50">
                 <span className="text-emerald-400">$</span>
                 <span>kf init</span>
               </pre>
-              <button className="bg-white text-black px-8 py-4 rounded-xl font-medium flex items-center gap-2 hover:bg-neutral-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                Get Started
-                <ArrowRight className="w-4 h-4" />
+              <button disabled className="bg-white/20 text-white/50 cursor-not-allowed px-8 py-4 rounded-xl font-medium flex items-center gap-2 transition-all">
+                Coming Soon
               </button>
             </motion.div>
           </motion.div>
@@ -385,12 +384,10 @@ export default function Home() {
              <div className="relative z-10">
                <h2 className="text-4xl font-bold tracking-tight mb-6">Ready to scale your output?</h2>
                <p className="text-neutral-400 max-w-xl mx-auto mb-10 text-lg">
-                 Join the future of software development. Run the command below to start coordinating AI coding agents on your local machine.
+                 Join the future of software development.
                </p>
-               <pre className="inline-flex glass-panel px-6 py-4 rounded-xl text-left font-mono text-sm border border-white/20 mb-8 max-w-full overflow-x-auto shadow-2xl">
-                 <code className="text-emerald-400">git clone</code> <span className="text-neutral-300">git@github.com:kiloforge/kiloforge.git</span><br/>
-                 <code className="text-emerald-400">cd</code> <span className="text-neutral-300">kiloforge</span><br/>
-                 <code className="text-emerald-400">make build && kf init</code>
+               <pre className="inline-flex glass-panel px-6 py-4 rounded-xl text-center font-mono text-lg font-semibold tracking-widest text-[#bbb] border border-white/20 mb-8 max-w-full overflow-x-auto shadow-2xl opacity-70">
+                 COMING SOON
                </pre>
              </div>
           </motion.div>
@@ -406,7 +403,7 @@ export default function Home() {
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Documentation</a>
-            <a href="#" className="hover:text-white transition-colors">GitHub</a>
+            <a href="https://github.com/kiloforge" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
             <a href="#" className="hover:text-white transition-colors">License</a>
           </div>
         </div>
