@@ -234,7 +234,7 @@ export default function Home() {
                     <HardDrive className="w-8 h-8 text-neutral-300" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3">1. Local Setup</h3>
-                  <p className="text-neutral-400 text-sm">Initialize and start a global Gitea server and Relay server on your machine with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf init</code>. Use <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code> on subsequent runs.</p>
+                  <p className="text-neutral-400 text-sm">Initialize and start a global Gitea server and Orchestrator on your machine with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf init</code>. Use <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code> on subsequent runs.</p>
                 </motion.div>
                 
                 <motion.div variants={fadeIn} className="relative z-10 flex flex-col items-center">
@@ -242,7 +242,7 @@ export default function Home() {
                     <TerminalSquare className="w-8 h-8 text-neutral-300" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3">2. Spawn Swarms</h3>
-                  <p className="text-neutral-400 text-sm">Create conductor tracks and spawn Claude Code agents into pooled worktrees to implement tickets.</p>
+                  <p className="text-neutral-400 text-sm">Create Kiloforge tracks and spawn Claude Code agents into pooled worktrees to implement tickets.</p>
                 </motion.div>
                 
                 <motion.div variants={fadeIn} className="relative z-10 flex flex-col items-center">
@@ -266,7 +266,7 @@ export default function Home() {
           >
              <motion.div variants={fadeIn} className="text-center mb-16">
                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Architecture</h2>
-               <p className="text-lg text-neutral-400">A robust multi-server relay system running directly on your machine.</p>
+               <p className="text-lg text-neutral-400">A robust multi-server orchestration system running directly on your machine.</p>
              </motion.div>
 
              <div className="flex flex-col gap-6 relative">

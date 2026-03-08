@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://kiloforge.com"),
   title: "Kiloforge | 1,000x Productivity with AI Swarms",
-  description: "An orchestration platform for coordinating AI coding agents at scale. Runs a private git forge, a real-time monitoring dashboard, and a relay server on your machine.",
+  description: "An orchestration platform for coordinating AI coding agents at scale. Runs a private git forge, a real-time monitoring dashboard, and an orchestrator on your machine.",
   keywords: ["AI agents", "git forge", "development orchestration", "Claude Code", "AI CLI", "Productivity"],
   openGraph: {
     title: "Kiloforge | Forge code at the speed of thought",
