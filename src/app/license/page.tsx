@@ -76,9 +76,12 @@ SOFTWARE.`}
       {/* Footer */}
       <footer className="border-t border-white/10 py-12 text-center text-sm text-neutral-500 bg-[#050505]">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-             <Image src="/kf_logo.webp" alt="Kiloforge Logo" width={24} height={24} className="rounded" />
-             <span>© 2026 Kiloforge. All rights reserved.</span>
+          <div className="flex flex-col items-start gap-1">
+            <div className="flex items-center gap-2">
+               <Image src="/kf_logo.webp" alt="Kiloforge Logo" width={24} height={24} className="rounded" />
+               <span>© 2026 Ben Baldivia. All rights reserved.</span>
+            </div>
+            <span className="text-neutral-600 text-xs ml-8">Created by <a href="https://blog.dev-kat.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Ben Baldivia</a></span>
           </div>
           <div className="flex gap-6">
             <a href="https://github.com/kiloforge" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
