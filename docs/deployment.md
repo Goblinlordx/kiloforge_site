@@ -73,3 +73,18 @@ Before making the CloudFront distribution, you need an SSL cert for your custom 
 Wait about 5-10 minutes for the CloudFront distribution to finish deploying. Then, try visiting `https://kiloforge.com`!
 
 AWS CloudFront will safely proxy requests to Vercel. Because we aren't forwarding the Host header, Vercel never knows that `kiloforge.com` is accessing the site, and completely bypasses any Custom Domain restrictions on your Vercel account.
+
+## Step 6: Automating Cache Invalidation (GitHub Actions)
+
+Because CloudFront is caching your Next.js application, pushing new code to your repository might initially not update for visitors until the CloudFront cache expires (defaults to 24 hours under the `CachingOptimized` policy).
+
+To automatically clear the CloudFront cache the moment Vercel successfully finishes deploying your site, we've included a **GitHub Action** (`.github/workflows/cloudfront-invalidation.yml`).
+
+1. Go to your **AWS IAM Console** and create a new programmatic user that has the `cloudfront:CreateInvalidation` permission.
+2. Go to your repository settings on **GitHub** -> **Secrets and variables** -> **Actions**.
+3. Add the following repository secrets:
+   - `AWS_ACCESS_KEY_ID` (from the new IAM user)
+   - `AWS_SECRET_ACCESS_KEY` (from the new IAM user)
+   - `CLOUDFRONT_DISTRIBUTION_ID` (looks like `E1ABCDEF2GHIJK`)
+
+Now, whenever Vercel successfully finishes deploying your code to the `Production` environment, Vercel triggers a webhook back to GitHub. This triggers the GitHub Action to instantly invalidate the `/*` path in CloudFront, making your new Next.js deployment live!
