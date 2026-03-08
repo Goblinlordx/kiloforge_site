@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   GitMerge, 
@@ -411,7 +412,7 @@ export default function Home() {
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Documentation</a>
             <a href="https://github.com/kiloforge" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-            <a href="#" className="hover:text-white transition-colors">License</a>
+            <Link href="/license" className="hover:text-white transition-colors">License</Link>
           </div>
         </div>
       </footer>
