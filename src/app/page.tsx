@@ -284,10 +284,11 @@ export default function Home() {
                        <p className="text-xs text-neutral-400 font-mono">Human Director</p>
                      </div>
                    </div>
-                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
-                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Directs tickets and tracks</p>
-                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Final PR review and merge</p>
-                   </div>
+                    <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
+                      <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></span> Defines project architecture and tracks</p>
+                      <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></span> Provides guidance if agents hit blockers</p>
+                      <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></span> Historically audits agent decision-making</p>
+                    </div>
                  </motion.div>
 
                  {/* Connector Arrow for Mobile */}
@@ -384,8 +385,8 @@ export default function Home() {
                      </div>
                    </div>
                    <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
-                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Local git repos and PRs</p>
-                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Fires webhook events to core</p>
+                     <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span> Cradle-to-grave autonomous PR merge pipelines</p>
+                     <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span> Historical record of agent decision-making</p>
                    </div>
                  </motion.div>
                </div>
