@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,6 +46,13 @@ export default function RootLayout({
     <html lang="en" className="dark scroll-smooth">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0a0a0a] text-neutral-200 selection:bg-neutral-800 selection:text-neutral-100 min-h-screen flex flex-col`}>
         {children}
+        {process.env.NEXT_PUBLIC_GOATCOUNTER_URL && (
+          <Script
+            src={process.env.NEXT_PUBLIC_GOATCOUNTER_SCRIPT_URL || "//gc.zgo.at/count.js"}
+            data-goatcounter={process.env.NEXT_PUBLIC_GOATCOUNTER_URL}
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );

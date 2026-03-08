@@ -1,98 +1,75 @@
-# Deployment & Custom Domain Guide (Namecheap -> AWS Route53 -> Vercel)
+# Deployment Guide: Vercel with AWS CloudFront (Custom Domain Proxy)
 
-Welcome! This guide explains how to properly route a domain purchased on Namecheap over to AWS Route 53, and connect it to a Vercel deployment of the Kiloforge site.
+Welcome! This guide explains how to deploy the Kiloforge site to Vercel and then use **AWS CloudFront** as a CDN proxy in front of it.
 
-## The Strategy
+### Why CloudFront?
 
-Instead of pointing Namecheap directly to Vercel, we use **AWS Route 53** as the "middleman" (the DNS Provider). This allows you to manage all your routing rules (A records, CNAMEs, TXT records for email) within AWS while still hosting the website on Vercel.
+Vercel restricts custom domains on certain plans (like Team accounts require a paid plan for custom domains). By placing CloudFront in front of Vercel, we can attach our custom domain directly to AWS. CloudFront then silently proxies the traffic to the free `.vercel.app` URL under the hood!
 
 **Data Flow:**
-Namecheap (Registrar) -> AWS Route 53 (DNS Provider) -> Vercel (Hosting)
+User -> `kiloforge.com` (AWS Route 53) -> AWS CloudFront -> `kiloforge-site.vercel.app` (Vercel)
 
 ---
 
-## Step 1: Create a Hosted Zone in AWS Route 53
-
-Before touching Namecheap, you need to tell AWS to expect traffic for your domain.
-
-1. Log into your **AWS Management Console**.
-2. Search for and open **Route 53**.
-3. In the left sidebar, click **Hosted zones**.
-4. Click the orange **Create hosted zone** button.
-5. In the **Domain name** field, type your exact domain (e.g., `kiloforge.com`).
-6. Leave the _Type_ as **Public hosted zone**.
-7. Click **Create hosted zone**.
-
-## Step 2: Get your AWS Nameservers (NS Records)
-
-1. AWS will immediately open your new Hosted Zone.
-2. Look at the **Records** table. Find the record with the type **NS** (Name Server).
-3. Under the **Value/Route traffic to** column, you will see **four different URLs**. They typically look like this:
-   - `ns-xxx.awsdns-xx.net.`
-   - `ns-xxxx.awsdns-xx.org.`
-   - `ns-xxxx.awsdns-xx.co.uk.`
-   - `ns-xxx.awsdns-xx.com.`
-4. **Copy all four of these nameservers.** (You can omit the trailing dot at the end of each one).
-
-## Step 3: Rehome Namecheap to AWS (Update Nameservers)
-
-Now you must tell Namecheap to stop managing the DNS and hand control over to AWS Route 53.
-
-1. Log into your **Namecheap account**.
-2. Go to your **Domain List**.
-3. Click the **Manage** button next to your Kiloforge domain.
-4. Scroll down slightly to the **Nameservers** section.
-5. Click the dropdown menu (which probably says "Namecheap BasicDNS") and change it to **Custom DNS**.
-6. Two input boxes will appear. **Paste the first two AWS nameservers** you copied from Route 53.
-7. Click **ADD NAMESERVER** to add two more boxes, and paste the final two AWS nameservers.
-8. **CRITICAL:** Click the small **green checkmark button** on the right side of the Nameservers row to save!
-
-_Note: Namecheap will warn you that DNS propagation can take up to 48 hours. In reality, it usually takes 15-30 minutes._
-
-## Step 4: Deploy your Code to Vercel
-
-If you haven't deployed the code yet, do so now:
+## Step 1: Deploy to Vercel
 
 1. Push your `kiloforge_site` folder to a new repository on **GitHub**.
 2. Log into **Vercel** (https://vercel.com).
 3. Click **Add New...** -> **Project**.
 4. Import your newly created GitHub repository.
-5. Vercel will auto-detect Next.js. Leave everything default and click **Deploy**.
-6. Vercel will give you a temporary URL (like `kiloforge-site-xxxx.vercel.app`).
+5. Vercel will auto-detect Next.js. Click **Deploy**.
+6. When finished, Vercel gives you an auto-generated URL (e.g., `kiloforge-site-xxxx.vercel.app`). **Copy this URL**.
 
-## Step 5: Connect Vercel to Route 53
+## Step 2: Request an SSL Certificate in AWS
 
-1. In your Vercel project dashboard, go to **Settings** -> **Domains**.
-2. Type in your custom domain (e.g., `kiloforge.com`) and click **Add**.
-3. Choose the option to explicitly add `kiloforge.com` and redirect `www.kiloforge.com` to it.
-4. Vercel will now show an "Invalid Configuration" error because your DNS parameters aren't set in AWS yet.
-5. Vercel will give you **two records** to create:
-   - An **A Record** (e.g., Name: `@`, Value: `76.76.21.21`).
-   - A **CNAME Record** (e.g., Name: `www`, Value: `cname.vercel-dns.com`).
+Before making the CloudFront distribution, you need an SSL cert for your custom domain.
 
-## Step 6: Create the Records in AWS
+1. Log into your **AWS Management Console**.
+2. Go to **Certificate Manager (ACM)**.
+3. **CRITICAL:** Switch your AWS region to **US East (N. Virginia) `us-east-1`**. CloudFront _only_ accepts certificates created in this specific region!
+4. Click **Request a certificate** -> **Request a public certificate**.
+5. Domain names: Enter `kiloforge.com` and click "Add another name to this certificate" and enter `*.kiloforge.com` (for www and subdomains).
+6. Validation method: **DNS validation**.
+7. Click **Request**.
+8. Go into the certificate details and click **Create records in Route 53** to validate it (assuming your domain's DNS is already governed by Route 53). Wait a few minutes for the status to become **Issued**.
 
-1. Go back to your **Hosted Zone in AWS Route 53**.
-2. Click **Create record**.
+## Step 3: Create the CloudFront Distribution
 
-**Create the A Record:**
+1. Open **CloudFront** in the AWS Console.
+2. Click **Create Distribution**.
+3. **Origin domain:** Paste your Vercel URL here (e.g., `kiloforge-site-xxxx.vercel.app`). Do _not_ include `https://`.
+4. **Protocol:** HTTPS only.
+5. **Viewer protocol policy:** Redirect HTTP to HTTPS.
+6. **Allowed HTTP methods:** `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`. (Needed if you ever add Next.js API routes or server actions).
+7. **Cache key and origin requests:**
+   - Select **Cache policy and origin request policy**.
+   - **Cache policy:** `CachingOptimized` (or create a custom one if you have dynamic SSR pages that shouldn't be cached).
+   - **Origin request policy:** Create a new custom policy:
+     - Name: `VercelProxyPolicy`
+     - **Headers: None** (This is the magic trick! We specifically do _not_ want to forward the `Host` header, so Vercel gets the `.vercel.app` Host header and serves the site instead of throwing a 404 because it doesn't recognize `kiloforge.com`).
+     - Query strings: **All**
+     - Cookies: **All**
+     - Attach this new policy.
+8. **Web Application Firewall (WAF):** Disable (unless you want to pay for it).
+9. **Alternate domain name (CNAME):** Click Add item, and enter `kiloforge.com`. Add another item for `www.kiloforge.com`.
+10. **Custom SSL certificate:** Select the ACM certificate you created in Step 2.
+11. Click **Create distribution**.
 
-1. Leave the **Record name** blank (this implies the root domain, like `@`).
-2. Set the **Record type** to **A - Routes traffic to an IPv4 address**.
-3. In the **Value** box, paste the IP address Vercel gave you (usually `76.76.21.21`).
-4. Click **Create records**.
+## Step 4: Point Route 53 to CloudFront
 
-**Create the CNAME Record:**
+1. Open **Route 53**.
+2. Go to your **Hosted zones** and click on your domain (`kiloforge.com`).
+3. Click **Create record**.
+4. **Record name:** Leave blank (for the root domain).
+5. **Record type:** `A - Routes traffic to an IPv4 address`.
+6. Enable the **Alias** toggle.
+7. **Route traffic to:** Choose **Alias to CloudFront distribution**.
+8. Select the CloudFront distribution you just created (it should appear in the dropdown. It looks like `d1234xx.cloudfront.net`).
+9. Click **Create records**.
+10. Optional: Repeat for a `www` record.
 
-1. Click **Create record** again.
-2. In the **Record name** box, type `www`.
-3. Set the **Record type** to **CNAME - Routes traffic to another domain name**.
-4. In the **Value** box, paste `cname.vercel-dns.com` (or the specific CNAME Vercel provided).
-5. Click **Create records**.
+## Step 5: Test it out!
 
-## Step 7: Wait for SSL Generation
+Wait about 5-10 minutes for the CloudFront distribution to finish deploying. Then, try visiting `https://kiloforge.com`!
 
-Go back to **Settings -> Domains** in Vercel.
-Within a few minutes, Vercel will detect the new AWS Route 53 records. The "Invalid Configuration" errors will disappear, the UI will update to say "Valid Configuration," and Vercel will automatically provision a free SSL/TLS Certificate for you.
-
-Your Kiloforge site will now be live on your custom domain!
+AWS CloudFront will safely proxy requests to Vercel. Because we aren't forwarding the Host header, Vercel never knows that `kiloforge.com` is accessing the site, and completely bypasses any Custom Domain restrictions on your Vercel account.
