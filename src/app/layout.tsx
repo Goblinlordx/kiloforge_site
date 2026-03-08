@@ -29,6 +29,7 @@ export const metadata: Metadata = {
         url: "https://kiloforge.com/og_image.png",
         width: 1200,
         height: 630,
+        type: "image/png",
         alt: "Kiloforge AI Swarms",
       },
     ],

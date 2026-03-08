@@ -61,9 +61,9 @@ export default function Home() {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
-            <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
+            <Link href="#features" className="hover:text-white transition-colors">Features</Link>
+            <Link href="#how-it-works" className="hover:text-white transition-colors">How it Works</Link>
+            <Link href="#architecture" className="hover:text-white transition-colors">Architecture</Link>
             <a href="https://github.com/kiloforge" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
               GitHub
             </a>
@@ -90,27 +90,27 @@ export default function Home() {
               className="absolute top-full left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/10 md:hidden overflow-hidden shadow-2xl"
             >
               <div className="flex flex-col px-6 py-6 gap-6 text-base font-medium text-neutral-300">
-                <a 
+                <Link 
                   href="#features" 
                   className="hover:text-white transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Features
-                </a>
-                <a 
+                </Link>
+                <Link 
                   href="#how-it-works" 
                   className="hover:text-white transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   How it Works
-                </a>
-                <a 
+                </Link>
+                <Link 
                   href="#architecture" 
                   className="hover:text-white transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Architecture
-                </a>
+                </Link>
                 <a 
                   href="https://github.com/kiloforge" 
                   target="_blank" 
