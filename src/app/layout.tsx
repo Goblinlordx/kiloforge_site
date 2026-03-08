@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = "https://kiloforge.dev"\;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kiloforge.com"),
+  metadataBase: new URL(BASE_URL),
   title: "Kiloforge | 1,000x Productivity with AI Swarms",
   description: "An orchestration platform for coordinating AI coding agents at scale. Runs a private git forge, a real-time monitoring dashboard, and an orchestrator on your machine.",
   keywords: ["AI agents", "git forge", "development orchestration", "Claude Code", "AI CLI", "Productivity"],
@@ -22,11 +24,11 @@ export const metadata: Metadata = {
     type: "website",
     title: "Kiloforge | Forge code at the speed of thought",
     description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
-    url: "https://kiloforge.com",
+    url: BASE_URL,
     siteName: "Kiloforge",
     images: [
       {
-        url: "https://kiloforge.com/opengraph-image.png",
+        url: `${BASE_URL}/og_image.png`,
         width: 1200,
         height: 630,
         type: "image/png",
@@ -38,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kiloforge | Forge code at the speed of thought",
     description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
-    images: ["https://kiloforge.com/twitter-image.png"],
+    images: [`${BASE_URL}/og_image.png`],
     creator: "@kiloforge",
   },
   icons: {
