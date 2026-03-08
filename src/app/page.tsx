@@ -43,6 +43,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-grid opacity-20" />
       </div>
 
+      {/* Corner Ribbon */}
+      <div className="fixed top-0 right-0 z-[100] w-32 h-32 md:w-36 md:h-36 overflow-hidden pointer-events-none">
+        <div className="absolute top-6 -right-8 md:top-7 md:-right-9 w-[140%] md:w-[150%] bg-gradient-to-r from-emerald-500 to-cyan-500/90 backdrop-blur-md text-white shadow-[0_0_30px_rgba(16,185,129,0.4)] text-center py-1 md:py-1.5 text-[10px] md:text-xs font-bold tracking-[0.2em] transform rotate-45 border-y border-emerald-400/50">
+          COMING SOON
+        </div>
+      </div>
+
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between relative">
