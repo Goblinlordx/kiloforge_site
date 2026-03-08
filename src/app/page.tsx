@@ -191,8 +191,8 @@ export default function Home() {
             />
             <FeatureCard 
               icon={<TerminalSquare className="w-6 h-6 text-cyan-400" />}
-              title="Autonomous CLI Agents"
-              description="Spawn Claude Code CLI agents that implement, review, and merge code independently."
+              title="Autonomous Cloud Agents"
+              description="Spawn cloud-based Claude Code agents that implement, review, and merge code independently."
             />
             <FeatureCard 
               icon={<LayoutDashboard className="w-6 h-6 text-indigo-400" />}
@@ -206,7 +206,7 @@ export default function Home() {
             />
             <FeatureCard 
               icon={<Activity className="w-6 h-6 text-amber-400" />}
-              title="End-to-End Tracing"
+              title="Cradle-to-Grave Tracing"
               description="OpenTelemetry traces follow each track from track conception through agent work, PR review, and final merge."
             />
             <FeatureCard 
