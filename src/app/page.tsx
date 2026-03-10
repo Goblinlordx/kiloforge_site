@@ -143,7 +143,6 @@ export default function Home() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <Link href="/features" className="hover:text-white transition-colors">Screenshots</Link>
             <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
             <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
             <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
@@ -179,13 +178,6 @@ export default function Home() {
                 >
                   Features
                 </a>
-                <Link
-                  href="/features"
-                  className="hover:text-white transition-colors"
-                  onClick={() => setTimeout(() => setIsMobileMenuOpen(false), 100)}
-                >
-                  Screenshots
-                </Link>
                 <a
                   href="#how-it-works"
                   className="hover:text-white transition-colors"
