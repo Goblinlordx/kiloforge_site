@@ -306,6 +306,9 @@ export default function Home() {
                 )}
                 <CopiedToast show={copied} />
               </div>
+              <p className="text-xs text-neutral-500/60 mt-4 text-center">
+                Requires a <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-400 transition-colors">Claude.ai</a> subscription with Claude Code access.
+              </p>
             </motion.div>
           </motion.div>
 
