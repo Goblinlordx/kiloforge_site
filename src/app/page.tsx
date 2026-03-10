@@ -364,7 +364,7 @@ export default function Home() {
                     <HardDrive className="w-8 h-8 text-neutral-300" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3">1. Local Setup</h3>
-                  <p className="text-neutral-400 text-sm">Start the Cortex control plane on your machine with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf init</code>. Use <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code> on subsequent runs.</p>
+                  <p className="text-neutral-400 text-sm">Start the Cortex control plane with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code>. Tear it down with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf down</code>.</p>
                 </motion.div>
 
                 <motion.div variants={fadeIn} className="relative z-10 flex flex-col items-center">
