@@ -17,12 +17,12 @@ const BASE_URL = "https://kiloforge.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+  title: "Kiloforge | Forge Code at the Speed of Thought",
   description: "An orchestration platform for coordinating AI coding agents at scale. Runs the Cortex control plane, Command Deck dashboard, and Claude Code swarms directly on your machine.",
   keywords: ["AI agents", "Cortex", "Command Deck", "development orchestration", "Claude Code", "AI CLI", "Productivity"],
   openGraph: {
     type: "website",
-    title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+    title: "Kiloforge | Forge Code at the Speed of Thought",
     description: "Orchestration platform coordinating Claude Code swarms with the Cortex control plane and Command Deck dashboard.",
     url: BASE_URL,
     siteName: "Kiloforge",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+    title: "Kiloforge | Forge Code at the Speed of Thought",
     description: "Orchestration platform coordinating Claude Code swarms with the Cortex control plane and Command Deck dashboard.",
     images: [`${BASE_URL}/og_image.png`],
     creator: "@kiloforge",

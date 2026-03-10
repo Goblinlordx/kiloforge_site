@@ -151,7 +151,7 @@ export default function Home() {
 
             <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-neutral-300 mb-8 z-10">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>Transforming pure intent into meaningful action</span>
+              <span>Forge code at the speed of thought</span>
             </motion.div>
             
             <motion.h1 variants={fadeIn} className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-tight max-w-4xl mx-auto z-10">
@@ -160,7 +160,7 @@ export default function Home() {
             </motion.h1>
             
             <motion.p variants={fadeIn} className="text-xl text-neutral-400 mb-12 max-w-2xl mx-auto leading-relaxed z-10">
-              An orchestration platform for coordinating AI coding agents at scale. Runs the Cortex control plane, Command Deck, and Claude Code swarms directly on your machine.
+              An orchestration platform that transforms pure intent into meaningful action. Runs the Cortex control plane, Command Deck, and Claude Code swarms directly on your machine.
             </motion.p>
 
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4">
