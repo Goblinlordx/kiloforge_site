@@ -13,7 +13,6 @@ import {
   HardDrive, 
   Sparkles, 
   ArrowRight, 
-  GitPullRequest,
   Menu,
   X,
   User
@@ -152,7 +151,7 @@ export default function Home() {
 
             <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-neutral-300 mb-8 z-10">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>Forge code at the speed of thought</span>
+              <span>Transforming pure intent into meaningful action</span>
             </motion.div>
             
             <motion.h1 variants={fadeIn} className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-tight max-w-4xl mx-auto z-10">
@@ -161,7 +160,7 @@ export default function Home() {
             </motion.h1>
             
             <motion.p variants={fadeIn} className="text-xl text-neutral-400 mb-12 max-w-2xl mx-auto leading-relaxed z-10">
-              An orchestration platform for coordinating AI coding agents at scale. Runs a private git forge, real-time dashboard, and AI swarms directly on your machine.
+              An orchestration platform for coordinating AI coding agents at scale. Runs the Cortex control plane, Command Deck, and Claude Code swarms directly on your machine.
             </motion.p>
 
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -187,27 +186,27 @@ export default function Home() {
             <FeatureCard 
               icon={<Shield className="w-6 h-6 text-emerald-400" />}
               title="Private Infrastructure"
-              description="Git forge, webhooks, and coordination run locally. Your code stays completely on your machine."
+              description="The Cortex control plane and all coordination run locally. Your code stays completely on your machine."
             />
             <FeatureCard 
               icon={<TerminalSquare className="w-6 h-6 text-cyan-400" />}
               title="Autonomous Cloud Agents"
-              description="Spawn cloud-based Claude Code agents that implement, review, and merge code independently."
+              description="Spawn Claude Code agents that implement, verify, and merge code independently in parallel worktrees."
             />
             <FeatureCard 
               icon={<LayoutDashboard className="w-6 h-6 text-indigo-400" />}
-              title="Real-Time Dashboard"
-              description="Monitor agents, track quotas, enforce budgets, and stream logs live in your browser."
+              title="Command Deck"
+              description="Monitor agents, track quotas, enforce budgets, and stream logs live in the Command Deck."
             />
-            <FeatureCard 
-              icon={<GitPullRequest className="w-6 h-6 text-rose-400" />}
-              title="Human + AI Collaboration"
-              description="Use Gitea for code review and PRs. Seamless collaboration between human developers and AI swarms."
+            <FeatureCard
+              icon={<User className="w-6 h-6 text-rose-400" />}
+              title="Kiloforger + Swarm"
+              description="Direct collaboration between Kiloforgers and Claude Code swarms via tracks, worktrees, and the Command Deck."
             />
             <FeatureCard 
               icon={<Activity className="w-6 h-6 text-amber-400" />}
               title="Cradle-to-Grave Tracing"
-              description="OpenTelemetry traces follow each track from track conception through agent work, PR review, and final merge."
+              description="OpenTelemetry traces follow each track from conception through agent work, verification, and final merge."
             />
             <FeatureCard 
               icon={<HardDrive className="w-6 h-6 text-blue-400" />}
@@ -235,7 +234,7 @@ export default function Home() {
                     <HardDrive className="w-8 h-8 text-neutral-300" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3">1. Local Setup</h3>
-                  <p className="text-neutral-400 text-sm">Initialize and start a global Gitea server and Orchestrator on your machine with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf init</code>. Use <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code> on subsequent runs.</p>
+                  <p className="text-neutral-400 text-sm">Start the Cortex control plane on your machine with <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf init</code>. Use <code className="text-neutral-300 bg-white/10 px-1 py-0.5 rounded">kf up</code> on subsequent runs.</p>
                 </motion.div>
                 
                 <motion.div variants={fadeIn} className="relative z-10 flex flex-col items-center">
@@ -250,8 +249,8 @@ export default function Home() {
                   <div className="w-24 h-24 rounded-full glass-panel flex items-center justify-center mb-6 border border-white/20 shadow-lg">
                     <GitMerge className="w-8 h-8 text-neutral-300" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">3. Review & Merge</h3>
-                  <p className="text-neutral-400 text-sm">Agents create PRs, respond to feedback, and automatically merge when CI and reviews pass.</p>
+                  <h3 className="text-xl font-semibold mb-3">3. Ship</h3>
+                  <p className="text-neutral-400 text-sm">Agents implement, verify, and merge directly — no review cycles needed. Ship at the speed of thought.</p>
                 </motion.div>
              </div>
           </motion.div>
@@ -267,7 +266,7 @@ export default function Home() {
           >
              <motion.div variants={fadeIn} className="text-center mb-16">
                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Architecture</h2>
-               <p className="text-lg text-neutral-400">A robust multi-server orchestration system running directly on your machine.</p>
+               <p className="text-lg text-neutral-400">A local control plane coordinating Claude Code swarms directly on your machine.</p>
              </motion.div>
 
              <div className="grid md:grid-cols-3 gap-6 relative mt-12">
@@ -296,15 +295,15 @@ export default function Home() {
                    <ArrowRight className="w-5 h-5 rotate-90" />
                  </div>
 
-                 {/* Dashboard UI */}
+                 {/* Command Deck */}
                  <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-indigo-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(99,102,241,0.05)] hover:border-indigo-500/40 transition-colors">
                    <div className="flex items-start gap-4 mb-3">
                      <div className="p-2.5 bg-indigo-500/10 rounded-lg text-indigo-400 shrink-0">
                        <LayoutDashboard className="w-6 h-6" />
                      </div>
                      <div>
-                       <h3 className="text-lg font-bold font-mono text-indigo-100">Dashboard UI</h3>
-                       <p className="text-xs text-neutral-400 font-mono">Observability Port</p>
+                       <h3 className="text-lg font-bold font-mono text-indigo-100">Command Deck</h3>
+                       <p className="text-xs text-neutral-400 font-mono">Real-Time Observability</p>
                      </div>
                    </div>
                    <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
@@ -319,26 +318,25 @@ export default function Home() {
                  <ArrowRight className="w-5 h-5 rotate-90" />
                </div>
 
-               {/* Center Column: Orchestrator */}
+               {/* Center Column: Cortex */}
                <div className="flex flex-col gap-6 justify-center relative md:mx-4">
                  {/* Desktop horizontal connectors */}
                  <div className="hidden md:block absolute top-[25%] -left-8 right-1/2 h-px bg-gradient-to-r from-amber-500/20 to-cyan-500/50 -z-10"></div>
                  <div className="hidden md:block absolute top-[75%] -left-8 right-1/2 h-px bg-gradient-to-r from-indigo-500/20 to-cyan-500/50 -z-10"></div>
-                 <div className="hidden md:block absolute top-[25%] left-1/2 -right-8 h-px bg-gradient-to-l from-emerald-500/20 to-cyan-500/50 -z-10"></div>
-                 <div className="hidden md:block absolute top-[75%] left-1/2 -right-8 h-px bg-gradient-to-l from-rose-500/20 to-cyan-500/50 -z-10"></div>
+                 <div className="hidden md:block absolute top-1/2 left-1/2 -right-8 h-px bg-gradient-to-l from-emerald-500/20 to-cyan-500/50 -z-10"></div>
 
                  <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border-2 border-cyan-500/30 relative z-10 bg-black/80 shadow-[0_0_50px_rgba(6,182,212,0.15)] transform md:scale-105">
                    <div className="flex flex-col items-center mb-6 text-center">
                      <div className="p-4 bg-cyan-500/10 rounded-xl text-cyan-400 mb-4 ring-1 ring-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
                        <Activity className="w-8 h-8" />
                      </div>
-                     <h3 className="text-2xl font-bold font-mono text-cyan-100">Orchestrator</h3>
+                     <h3 className="text-2xl font-bold font-mono text-cyan-100">Cortex</h3>
                      <p className="text-sm text-cyan-400/80 font-mono mt-1">Local Control Plane</p>
                    </div>
                    <div className="text-neutral-300 text-xs space-y-2 bg-white/5 p-4 rounded-xl border border-white/5">
                      <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Central system router proxy</p>
                      <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Agent lifecycle management</p>
-                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Dev-Reviewer cycle routing</p>
+                     <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Track and worktree coordination</p>
                      <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span> Merge context serialization</p>
                    </div>
                  </motion.div>
@@ -349,7 +347,7 @@ export default function Home() {
                  <ArrowRight className="w-5 h-5 rotate-90" />
                </div>
 
-               {/* Right Column: Agents & Forge */}
+               {/* Right Column: Claude Code Swarm */}
                <div className="flex flex-col gap-6 justify-center">
                  {/* Claude Code Swarm */}
                  <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-emerald-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(52,211,153,0.05)] hover:border-emerald-500/40 transition-colors">
@@ -358,7 +356,7 @@ export default function Home() {
                        <TerminalSquare className="w-6 h-6" />
                      </div>
                      <div>
-                       <h3 className="text-lg font-bold font-mono text-emerald-100">Cloud Agents</h3>
+                       <h3 className="text-lg font-bold font-mono text-emerald-100">Claude Code Swarm</h3>
                        <p className="text-xs text-neutral-400 font-mono">Claude Code Swarm</p>
                      </div>
                    </div>
@@ -368,27 +366,6 @@ export default function Home() {
                    </div>
                  </motion.div>
 
-                 {/* Connector Arrow for Mobile */}
-                 <div className="flex justify-center md:hidden text-white/10 py-1">
-                   <ArrowRight className="w-5 h-5 rotate-90" />
-                 </div>
-
-                 {/* Gitea Backend */}
-                 <motion.div variants={fadeIn} className="glass-panel p-6 rounded-2xl border border-rose-500/20 relative z-10 bg-black/60 shadow-[0_0_30px_rgba(244,63,94,0.05)] hover:border-rose-500/40 transition-colors">
-                   <div className="flex items-start gap-4 mb-3">
-                     <div className="p-2.5 bg-rose-500/10 rounded-lg text-rose-400 shrink-0">
-                       <GitMerge className="w-6 h-6" />
-                     </div>
-                     <div>
-                       <h3 className="text-lg font-bold font-mono text-rose-100">Gitea Backend</h3>
-                       <p className="text-xs text-neutral-400 font-mono">Private Forge</p>
-                     </div>
-                   </div>
-                   <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
-                     <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span> Cradle-to-grave autonomous PR merge pipelines</p>
-                     <p className="flex items-start gap-2"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span> Historical record of agent decision-making</p>
-                   </div>
-                 </motion.div>
                </div>
              </div>
           </motion.div>
@@ -403,9 +380,9 @@ export default function Home() {
           >
              <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent" />
              <div className="relative z-10">
-               <h2 className="text-4xl font-bold tracking-tight mb-6">Ready to scale your output?</h2>
+               <h2 className="text-4xl font-bold tracking-tight mb-6">Ready to transform intent into action?</h2>
                <p className="text-neutral-400 max-w-xl mx-auto mb-10 text-lg">
-                 Join the future of software development.
+                 Ship at 1,000x with the Cortex, Command Deck, and Claude Code swarms.
                </p>
                <pre className="inline-flex glass-panel px-6 py-4 rounded-xl text-center font-mono text-lg font-semibold tracking-widest text-[#bbb] border border-white/20 mb-8 max-w-full overflow-x-auto shadow-2xl opacity-70">
                  COMING SOON

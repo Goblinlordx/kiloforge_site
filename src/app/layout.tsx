@@ -17,13 +17,13 @@ const BASE_URL = "https://kiloforge.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "Kiloforge | 1,000x Productivity with AI Swarms",
-  description: "An orchestration platform for coordinating AI coding agents at scale. Runs a private git forge, a real-time monitoring dashboard, and an orchestrator on your machine.",
-  keywords: ["AI agents", "git forge", "development orchestration", "Claude Code", "AI CLI", "Productivity"],
+  title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+  description: "An orchestration platform for coordinating AI coding agents at scale. Runs the Cortex control plane, Command Deck dashboard, and Claude Code swarms directly on your machine.",
+  keywords: ["AI agents", "Cortex", "Command Deck", "development orchestration", "Claude Code", "AI CLI", "Productivity"],
   openGraph: {
     type: "website",
-    title: "Kiloforge | Forge code at the speed of thought",
-    description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
+    title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+    description: "Orchestration platform coordinating Claude Code swarms with the Cortex control plane and Command Deck dashboard.",
     url: BASE_URL,
     siteName: "Kiloforge",
     images: [
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kiloforge | Forge code at the speed of thought",
-    description: "Orchestration platform for coordinating AI coding agents at scale on your local machine.",
+    title: "Kiloforge | Transforming Pure Intent into Meaningful Action",
+    description: "Orchestration platform coordinating Claude Code swarms with the Cortex control plane and Command Deck dashboard.",
     images: [`${BASE_URL}/og_image.png`],
     creator: "@kiloforge",
   },
