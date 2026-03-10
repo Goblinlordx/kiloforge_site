@@ -68,13 +68,15 @@ const installCommands: Record<Platform, { primary: string; alt?: string; label: 
 function InstallCommand({ command, onCopy }: { command: string; onCopy: () => void }) {
   return (
     <div className="relative group">
-      <pre className="glass-panel px-6 py-4 pr-14 rounded-xl flex items-center gap-3 text-sm font-mono text-neutral-300 border border-white/10 shadow-2xl overflow-x-auto">
+      <pre className="glass-panel px-6 py-4 pr-14 rounded-xl flex items-center gap-3 text-sm font-mono text-neutral-300 border border-white/10 shadow-2xl overflow-hidden">
         <span className="text-emerald-400 shrink-0">$</span>
-        <span className="whitespace-nowrap">{command}</span>
+        <span className="whitespace-nowrap overflow-x-auto">{command}</span>
       </pre>
+      {/* Fade overlay before copy button */}
+      <div className="absolute right-12 top-0 bottom-0 w-10 bg-gradient-to-r from-transparent to-white/[0.04] pointer-events-none rounded-r-xl" />
       <button
         onClick={onCopy}
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all border border-white/10"
+        className="absolute right-0 top-0 bottom-0 flex items-center px-3 rounded-r-xl bg-white/[0.04] hover:bg-white/[0.08] text-neutral-400 hover:text-white transition-all border-l border-white/10"
         aria-label="Copy to clipboard"
       >
         <Copy className="w-4 h-4" />
