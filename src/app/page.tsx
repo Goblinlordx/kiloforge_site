@@ -50,10 +50,8 @@ function detectPlatform(): Platform {
 
 const installCommands: Record<Platform, { primary: string; alt?: string; label: string; altLabel?: string }> = {
   macos: {
-    label: "Homebrew",
-    primary: "brew tap kiloforge/tap && brew install kf",
-    altLabel: "Shell script",
-    alt: "curl -fsSL https://raw.githubusercontent.com/kiloforge/kiloforge/main/install.sh | sh",
+    label: "Shell script",
+    primary: "curl -fsSL https://raw.githubusercontent.com/kiloforge/kiloforge/main/install.sh | sh",
   },
   linux: {
     label: "Shell script",
