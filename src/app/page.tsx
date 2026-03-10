@@ -510,7 +510,7 @@ export default function Home() {
           >
              <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent" />
              <div className="relative z-10">
-               <h2 className="text-4xl font-bold tracking-tight mb-6">Ready to transform intent into action?</h2>
+               <h2 className="text-4xl font-bold tracking-tight mb-6">Ready to scale your output?</h2>
                <p className="text-neutral-400 max-w-xl mx-auto mb-10 text-lg">
                  Ship at 1,000x with the Cortex, Command Deck, and Claude Code swarms.
                </p>
