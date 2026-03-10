@@ -74,7 +74,7 @@ function InstallCommand({ command, onCopy }: { command: string; onCopy: () => vo
       </pre>
       <button
         onClick={onCopy}
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-400 hover:text-white transition-all border border-white/5"
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-all border border-white/10"
         aria-label="Copy to clipboard"
       >
         <Copy className="w-4 h-4" />
@@ -245,7 +245,7 @@ export default function Home() {
             </motion.p>
 
             {/* Platform Install Section */}
-            <motion.div variants={fadeIn} className="w-full max-w-lg z-10" id="install">
+            <motion.div variants={fadeIn} className="w-full max-w-2xl z-10" id="install">
               {/* Platform Tabs */}
               <div className="flex items-center justify-center gap-1 mb-4 p-1 rounded-xl bg-white/5 border border-white/10 w-fit mx-auto">
                 {(["macos", "linux", "windows"] as Platform[]).map((p) => (
