@@ -1,86 +1,66 @@
-# Deployment Guide: Vercel with AWS CloudFront (Custom Domain Proxy)
+# Deployment Guide: AWS S3 + CloudFront
 
-Welcome! This guide explains how to deploy the Kiloforge site to Vercel and then use **AWS CloudFront** as a CDN proxy in front of it.
-
-### Why CloudFront?
-
-Vercel restricts custom domains on certain plans (like Team accounts require a paid plan for custom domains). By placing CloudFront in front of Vercel, we can attach our custom domain directly to AWS. CloudFront then silently proxies the traffic to the free `.vercel.app` URL under the hood!
+The Kiloforge site is a statically exported Next.js app deployed to **AWS S3** with **CloudFront** as the CDN. Deployment is automated via **GitHub Actions** on every push to `main`.
 
 **Data Flow:**
-User -> `kiloforge.com` (AWS Route 53) -> AWS CloudFront -> `kiloforge-site.vercel.app` (Vercel)
+User -> `kiloforge.dev` (AWS Route 53) -> AWS CloudFront -> S3 (`kiloforge-site-prod`)
 
 ---
 
-## Step 1: Deploy to Vercel
+## Architecture
 
-1. Push your `kiloforge_site` folder to a new repository on **GitHub**.
-2. Log into **Vercel** (https://vercel.com).
-3. Click **Add New...** -> **Project**.
-4. Import your newly created GitHub repository.
-5. Vercel will auto-detect Next.js. Click **Deploy**.
-6. When finished, Vercel gives you an auto-generated URL (e.g., `kiloforge-site-xxxx.vercel.app`). **Copy this URL**.
+- **Next.js** with `output: 'export'` generates a fully static site in `out/`
+- **S3 bucket** (`kiloforge-site-prod`, us-east-1) stores the static files with block-all-public-access enabled
+- **CloudFront** serves the site globally with edge caching, using Origin Access Control (OAC) to read from S3
+- **Route 53** provides DNS (A record alias to CloudFront)
+- **ACM** provides the SSL certificate (must be in us-east-1 for CloudFront)
 
-## Step 2: Request an SSL Certificate in AWS
+## CI/CD Pipeline
 
-Before making the CloudFront distribution, you need an SSL cert for your custom domain.
+On every push to `main`, GitHub Actions (`.github/workflows/deploy.yml`) runs:
 
-1. Log into your **AWS Management Console**.
-2. Go to **Certificate Manager (ACM)**.
-3. **CRITICAL:** Switch your AWS region to **US East (N. Virginia) `us-east-1`**. CloudFront _only_ accepts certificates created in this specific region!
-4. Click **Request a certificate** -> **Request a public certificate**.
-5. Domain names: Enter `kiloforge.com` and click "Add another name to this certificate" and enter `*.kiloforge.com` (for www and subdomains).
-6. Validation method: **DNS validation**.
-7. Click **Request**.
-8. Go into the certificate details and click **Create records in Route 53** to validate it (assuming your domain's DNS is already governed by Route 53). Wait a few minutes for the status to become **Issued**.
+1. `npm ci` — install dependencies
+2. `npm run build` — static export to `out/`
+3. `aws s3 sync out/ s3://kiloforge-site-prod --delete` — upload to S3
+4. `aws cloudfront create-invalidation --paths "/*"` — bust the CDN cache
 
-## Step 3: Create the CloudFront Distribution
+### GitHub Secrets Required
 
-1. Open **CloudFront** in the AWS Console.
-2. Click **Create Distribution**.
-3. **Origin domain:** Paste your Vercel URL here (e.g., `kiloforge-site-xxxx.vercel.app`). Do _not_ include `https://`.
-4. **Protocol:** HTTPS only.
-5. **Viewer protocol policy:** Redirect HTTP to HTTPS.
-6. **Allowed HTTP methods:** `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`. (Needed if you ever add Next.js API routes or server actions).
-7. **Cache key and origin requests:**
-   - Select **Cache policy and origin request policy**.
-   - **Cache policy:** `CachingDisabled` (This ensures CloudFront always fetches the freshest HTML from Vercel for your pages).
-   - **Origin request policy:** Create a new custom policy:
-     - Name: `VercelProxyPolicy`
-     - **Headers: None** (This is the magic trick! We specifically do _not_ want to forward the `Host` header, so Vercel gets the `.vercel.app` Host header and serves the site instead of throwing a 404).
-     - Query strings: **All**
-     - Cookies: **All**
-     - Attach this new policy.
-8. **Web Application Firewall (WAF):** Disable (unless you want to pay for it).
-9. **Alternate domain name (CNAME):** Click Add item, and enter `kiloforge.com`. Add another item for `www.kiloforge.com`.
-10. **Custom SSL certificate:** Select the ACM certificate you created in Step 2.
-11. Click **Create distribution** and wait for it to deploy.
-12. **CRITICAL CACHE SETUP:** Once created, click on the **Behaviors** tab in your distribution.
-    - Click **Create behavior**.
-    - Path pattern: `/_next/*`
-    - Origin: Select your Vercel origin.
-    - Viewer Protocol Policy: Redirect HTTP to HTTPS
-    - Cache key and origin requests: Select **Cache policy and origin request policy**
-    - Cache policy: `CachingOptimized`
-    - Origin request policy: `VercelProxyPolicy`
-    - Click **Create**.
+| Secret | Description |
+|--------|-------------|
+| `AWS_ACCESS_KEY_ID` | IAM user `kiloforge-site-deploy` access key |
+| `AWS_SECRET_ACCESS_KEY` | IAM user secret key |
+| `CLOUDFRONT_DISTRIBUTION_ID` | CloudFront distribution ID (e.g., `E1AWOUQ78MN9ZS`) |
 
-    _(Next.js already hashes the filenames of all JavaScript, CSS, and image assets in the `/_next/` folder. This behavior tells CloudFront to cache them aggressively at the edge for blazing fast load times globally, while your default `_` behavior ensures CloudFront always serves the newest, freshest HTML layout for those assets!).\*
+## AWS Resources
 
-## Step 4: Point Route 53 to CloudFront
+### S3 Bucket
+- **Name:** `kiloforge-site-prod`
+- **Region:** us-east-1
+- **Public access:** Blocked (CloudFront OAC handles access)
+- **Bucket policy:** Allows `s3:GetObject` for CloudFront service principal, scoped to the distribution ARN
 
-1. Open **Route 53**.
-2. Go to your **Hosted zones** and click on your domain (`kiloforge.com`).
-3. Click **Create record**.
-4. **Record name:** Leave blank (for the root domain).
-5. **Record type:** `A - Routes traffic to an IPv4 address`.
-6. Enable the **Alias** toggle.
-7. **Route traffic to:** Choose **Alias to CloudFront distribution**.
-8. Select the CloudFront distribution you just created (it should appear in the dropdown. It looks like `d1234xx.cloudfront.net`).
-9. Click **Create records**.
-10. Optional: Repeat for a `www` record.
+### CloudFront Distribution
+- **Origin:** `kiloforge-site-prod.s3.us-east-1.amazonaws.com` with OAC
+- **Default root object:** `index.html`
+- **Custom error response:** 403 → `/404.html` (404 status)
+- **Cache policy:** `CachingOptimized` (static assets are content-hashed)
+- **Alternate domains:** `kiloforge.com`, `www.kiloforge.com`, `kiloforge.dev`
+- **SSL:** ACM certificate (us-east-1)
 
-## Step 5: Test it out!
+### IAM User
+- **Name:** `kiloforge-site-deploy`
+- **Permissions:** S3 put/delete/list on the bucket + CloudFront invalidation on the distribution
 
-Wait about 5-10 minutes for the CloudFront distribution to finish deploying. Then, try visiting `https://kiloforge.com`!
+### Route 53
+- A record (alias) pointing to the CloudFront distribution
 
-AWS CloudFront will safely proxy requests to Vercel. Because we aren't forwarding the Host header, Vercel never knows that `kiloforge.com` is accessing the site, and completely bypasses any Custom Domain restrictions on your Vercel account.
+## Manual Cache Invalidation
+
+If you need to force a cache refresh without deploying:
+
+```bash
+aws cloudfront create-invalidation \
+  --distribution-id E1AWOUQ78MN9ZS \
+  --paths "/*"
+```
