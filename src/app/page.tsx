@@ -254,6 +254,12 @@ export default function Home() {
 
             {/* Platform Install Section */}
             <motion.div variants={fadeIn} className="w-full max-w-2xl z-10" id="install">
+              <div className="flex items-center justify-center mb-5">
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  Early Alpha Build
+                </span>
+              </div>
               {/* Platform Tabs */}
               <div className="flex items-center justify-center gap-1 mb-4 p-1 rounded-xl bg-white/5 border border-white/10 w-fit mx-auto">
                 {(["macos", "linux", "windows"] as Platform[]).map((p) => (
