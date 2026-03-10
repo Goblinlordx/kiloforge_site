@@ -357,7 +357,7 @@ export default function Home() {
                      </div>
                      <div>
                        <h3 className="text-lg font-bold font-mono text-emerald-100">Claude Code Swarm</h3>
-                       <p className="text-xs text-neutral-400 font-mono">Claude Code Swarm</p>
+                       <p className="text-xs text-neutral-400 font-mono">Autonomous Agents</p>
                      </div>
                    </div>
                    <div className="text-neutral-300 text-xs pl-[3.5rem] space-y-1.5">
