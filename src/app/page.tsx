@@ -112,8 +112,9 @@ export default function Home() {
   const [platform, setPlatform] = useState<Platform>("macos");
   const [copied, setCopied] = useState(false);
 
+  // Only macOS is available during early alpha — always default to it
   useEffect(() => {
-    setPlatform(detectPlatform());
+    setPlatform("macos");
   }, []);
 
   const copyToClipboard = (text: string) => {
@@ -262,20 +263,26 @@ export default function Home() {
               </div>
               {/* Platform Tabs */}
               <div className="flex items-center justify-center gap-1 mb-4 p-1 rounded-xl bg-white/5 border border-white/10 w-fit mx-auto">
-                {(["macos", "linux", "windows"] as Platform[]).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPlatform(p)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      platform === p
-                        ? "bg-white/10 text-white border border-white/15 shadow-sm"
-                        : "text-neutral-400 hover:text-neutral-200 border border-transparent"
-                    }`}
-                  >
-                    {platformMeta[p].icon}
-                    <span className="hidden sm:inline">{platformMeta[p].label}</span>
-                  </button>
-                ))}
+                {(["macos", "linux", "windows"] as Platform[]).map((p) => {
+                  const disabled = p !== "macos";
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => !disabled && setPlatform(p)}
+                      title={disabled ? "Coming soon" : undefined}
+                      className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        disabled
+                          ? "text-neutral-600 cursor-not-allowed opacity-50"
+                          : platform === p
+                            ? "bg-white/10 text-white border border-white/15 shadow-sm"
+                            : "text-neutral-400 hover:text-neutral-200 border border-transparent"
+                      }`}
+                    >
+                      {platformMeta[p].icon}
+                      <span className="hidden sm:inline">{platformMeta[p].label}</span>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Install Command */}
