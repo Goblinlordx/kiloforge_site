@@ -41,7 +41,7 @@ export default function FeaturesPage() {
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/index.html" className="flex items-center gap-3">
             <Image
               src="/kf_logo.webp"
               alt="Kiloforge Logo"
@@ -55,7 +55,7 @@ export default function FeaturesPage() {
           </Link>
           <div className="flex items-center gap-6 text-sm font-medium text-neutral-400">
             <Link
-              href="/"
+              href="/index.html"
               className="hover:text-white transition-colors flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />

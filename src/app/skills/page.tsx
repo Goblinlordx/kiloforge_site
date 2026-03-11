@@ -173,12 +173,12 @@ export default function SkillsPage() {
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/index.html" className="flex items-center gap-3">
             <Image src="/kf_logo.webp" alt="Kiloforge Logo" width={32} height={32} className="rounded-md shadow-lg" />
             <span className="font-semibold text-lg tracking-tight">Kiloforge</span>
           </Link>
           <div className="flex items-center gap-6 text-sm font-medium text-neutral-400">
-            <Link href="/" className="hover:text-white transition-colors flex items-center gap-2">
+            <Link href="/index.html" className="hover:text-white transition-colors flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" />
               Back Home
             </Link>
@@ -346,7 +346,7 @@ export default function SkillsPage() {
               <p className="text-neutral-400 leading-relaxed max-w-3xl">
                 These skills work standalone in any Claude Code session — this is exactly how Kiloforge itself was built.
                 For teams scaling to many parallel agents, the full{" "}
-                <Link href="/" className="text-emerald-400 hover:underline">Kiloforge platform</Link>{" "}
+                <Link href="/index.html" className="text-emerald-400 hover:underline">Kiloforge platform</Link>{" "}
                 adds a local control plane (Cortex), a real-time dashboard (Command Deck), and agent lifecycle management
                 to handle the coordination problems that emerge at scale.
               </p>
@@ -431,11 +431,11 @@ export default function SkillsPage() {
             </span>
           </div>
           <div className="flex gap-6">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/index.html" className="hover:text-white transition-colors">Home</Link>
             <a href="https://github.com/Kiloforge/kiloforge-skills" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
               GitHub
             </a>
-            <Link href="/license/" className="hover:text-white transition-colors">License</Link>
+            <Link href="/license/index.html" className="hover:text-white transition-colors">License</Link>
           </div>
         </div>
       </footer>
