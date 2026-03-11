@@ -327,9 +327,14 @@ export default function Home() {
               <p className="text-xs text-neutral-500/60 mt-4 text-center">
                 Requires a <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-400 transition-colors">Claude.ai</a> subscription with Claude Code access.
               </p>
-              <p className="text-xs text-neutral-500/60 mt-2 text-center">
-                Just want the skills? <Link href="/skills" className="text-emerald-400/80 hover:text-emerald-400 underline transition-colors">Install skills only</Link> — no additional software needed. <Link href="/skills#how-it-works" className="text-neutral-400 hover:text-white underline transition-colors">See how it works</Link>.
-              </p>
+              <div className="mt-4 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                <p className="text-sm text-neutral-300">
+                  Just want the skills? <Link href="/skills" className="text-emerald-400 hover:text-emerald-300 underline transition-colors">Install skills only</Link> — no additional software needed.
+                </p>
+                <p className="text-xs text-neutral-400 mt-1">
+                  <Link href="/skills#how-it-works" className="hover:text-white underline transition-colors">See how it works</Link>
+                </p>
+              </div>
             </motion.div>
           </motion.div>
 
