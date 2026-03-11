@@ -435,7 +435,7 @@ export default function SkillsPage() {
             <a href="https://github.com/Kiloforge/kiloforge-skills" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
               GitHub
             </a>
-            <Link href="/license" className="hover:text-white transition-colors">License</Link>
+            <Link href="/license/" className="hover:text-white transition-colors">License</Link>
           </div>
         </div>
       </footer>
