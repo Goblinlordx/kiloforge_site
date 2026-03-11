@@ -1,89 +1,101 @@
 import { Metadata } from "next";
-import { ArrowLeft, ExternalLink, GitBranch, Code2, LayoutDashboard, TerminalSquare, Activity, Puzzle, TestTube, FileText, Shield, Gauge } from "lucide-react";
+import { ArrowLeft, ExternalLink, GitBranch, Code2, LayoutDashboard, TerminalSquare, Activity, Puzzle, TestTube, FileText, Shield, Gauge, Clock, Zap, DollarSign, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Status Report | Kiloforge",
   description:
-    "Kiloforge early development status report — from conception to alpha deployment. 172 tracks, 20K Go SLOC, 93 test files, and a full product audit.",
+    "Kiloforge: built in 5 days with 1,552 commits, 348 tracks, and 81K SLOC. From conception to alpha deployment — a full project and product audit.",
   openGraph: {
     title: "Kiloforge Status Report — Conception to Alpha",
     description:
-      "172 completed tracks, 20K Go SLOC, 10.6K frontend SLOC, 93 Go test files, 21 E2E specs. Full product audit covering CLI, API, Dashboard, and orchestration.",
+      "Built in 5 days. 1,552 commits. 348 tracks. 81K SLOC. ~$200 actual cost vs ~$680K median estimate. Full project report and product audit.",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "Kiloforge Status Report — Conception to Alpha",
     description:
-      "172 completed tracks, 20K Go SLOC, 10.6K frontend SLOC, 93 Go test files, 21 E2E specs. Full product audit.",
+      "Built in 5 days. 1,552 commits. 348 tracks. 81K SLOC. ~$200 actual cost vs ~$680K median estimate.",
   },
 };
 
-const snapshot = [
-  { label: "Completed Tracks", value: "172" },
+/* ── Hero stats (from kf-report) ── */
+
+const heroStats = [
+  { value: "5", label: "Days", sub: "calendar & active" },
+  { value: "1,552", label: "Commits", sub: "total" },
+  { value: "~348", label: "Tracks", sub: "lifetime" },
+  { value: "81K", label: "SLOC", sub: "functional code" },
+];
+
+const dailyActivity = [
+  { date: "Mar 7", day: "Sat", commits: 95, tracks: 14, label: "Bootstrap & Architecture", barPct: 17 },
+  { date: "Mar 8", day: "Sun", commits: 292, tracks: 58, label: "Dashboard & Core Features", barPct: 52 },
+  { date: "Mar 9", day: "Mon", commits: 317, tracks: 76, label: "Feature Blitz & E2E Testing", barPct: 57 },
+  { date: "Mar 10", day: "Tue", commits: 560, tracks: 126, label: "Parallel Scaling & Polish", barPct: 100 },
+  { date: "Mar 11", day: "Wed", commits: 288, tracks: 74, label: "Hardening & Release Prep", barPct: 51 },
+];
+
+const velocityStats = [
+  { label: "Commits/day (avg)", value: "~310" },
+  { label: "Peak commits/day", value: "560" },
+  { label: "Week 10 track rate", value: "~36/day" },
+  { label: "Week 11 track rate", value: "~92/day" },
+  { label: "Week-over-week speedup", value: "2.6x" },
+  { label: "Peak tracks/day", value: "126" },
+];
+
+const slocBreakdown = [
+  { lang: "Go", sloc: "39,652", pct: 49, color: "bg-cyan-400" },
+  { lang: "TypeScript", sloc: "21,170", pct: 26, color: "bg-indigo-400" },
+  { lang: "CSS", sloc: "6,636", pct: 8, color: "bg-rose-400" },
+  { lang: "Markdown", sloc: "8,968", pct: 11, color: "bg-amber-400" },
+  { lang: "YAML/Shell/Make", sloc: "4,144", pct: 5, color: "bg-emerald-400" },
+  { lang: "SQL/Other", sloc: "489", pct: 1, color: "bg-neutral-400" },
+];
+
+const costComparison = [
+  { model: "COCOMO", mid: "$2.73M" },
+  { model: "Function Point", mid: "$351K" },
+  { model: "Parametric (SLOC)", mid: "$760K" },
+  { model: "Effort by Analogy", mid: "$600K" },
+];
+
+/* ── Product audit data ── */
+
+const productSnapshot = [
   { label: "Go SLOC (hand-written)", value: "~20,000" },
-  { label: "Go SLOC (generated)", value: "~12,000" },
-  { label: "Frontend SLOC", value: "~10,600" },
   { label: "Go Test SLOC", value: "~19,300" },
   { label: "Go Test Files", value: "93" },
-  { label: "Frontend Unit Tests", value: "22" },
   { label: "E2E Test Specs", value: "21" },
   { label: "API Operations", value: "49" },
   { label: "SSE Event Types", value: "11+" },
   { label: "Core Services", value: "12" },
-  { label: "Adapter Packages", value: "18" },
   { label: "Port Interfaces", value: "20" },
-  { label: "Domain Models", value: "11" },
   { label: "Dashboard Pages", value: "5" },
   { label: "Frontend Components", value: "~63" },
   { label: "Frontend Hooks", value: "28" },
   { label: "Embedded Skills", value: "15" },
-  { label: "CI Workflows", value: "3" },
-  { label: "Documentation Files", value: "5" },
 ];
 
 const strengths = [
-  {
-    title: "Exceptional Test Coverage",
-    description: "1:1 test-to-source ratio (19K test SLOC vs 20K source SLOC), 21 E2E specs, 93 Go test files.",
-    color: "emerald",
-  },
-  {
-    title: "Clean Architecture",
-    description: "Strict port/adapter pattern, 12 services with clean separation, zero TODOs in source.",
-    color: "cyan",
-  },
-  {
-    title: "Schema-First API",
-    description: "OpenAPI 3.1 + AsyncAPI 3.0, code generation pipeline, verification in CI.",
-    color: "indigo",
-  },
-  {
-    title: "Comprehensive Real-Time System",
-    description: "11+ SSE event types, WebSocket for agent interaction, live dashboard updates.",
-    color: "amber",
-  },
-  {
-    title: "Mature CI/CD",
-    description: "Lint, test, deps verification, codegen verification across Go + frontend.",
-    color: "rose",
-  },
-  {
-    title: "Robust Orchestration",
-    description: "Dependency-aware work queue, merge lock with dual-mode (HTTP/mkdir), OpenTelemetry tracing.",
-    color: "blue",
-  },
+  { title: "Exceptional Test Coverage", description: "1:1 test-to-source ratio (19K test SLOC vs 20K source SLOC), 21 E2E specs, 93 Go test files.", color: "emerald" },
+  { title: "Clean Architecture", description: "Strict port/adapter pattern, 12 services with clean separation, zero TODOs in source.", color: "cyan" },
+  { title: "Schema-First API", description: "OpenAPI 3.1 + AsyncAPI 3.0, code generation pipeline, verification in CI.", color: "indigo" },
+  { title: "Comprehensive Real-Time System", description: "11+ SSE event types, WebSocket for agent interaction, live dashboard updates.", color: "amber" },
+  { title: "Mature CI/CD", description: "Lint, test, deps verification, codegen verification across Go + frontend.", color: "rose" },
+  { title: "Robust Orchestration", description: "Dependency-aware work queue, merge lock with dual-mode (HTTP/mkdir), OpenTelemetry tracing.", color: "blue" },
 ];
 
-const colorMap: Record<string, { bg: string; text: string; border: string; dot: string }> = {
-  emerald: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/20", dot: "bg-emerald-400" },
-  cyan: { bg: "bg-cyan-500/10", text: "text-cyan-400", border: "border-cyan-500/20", dot: "bg-cyan-400" },
-  indigo: { bg: "bg-indigo-500/10", text: "text-indigo-400", border: "border-indigo-500/20", dot: "bg-indigo-400" },
-  amber: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
-  rose: { bg: "bg-rose-500/10", text: "text-rose-400", border: "border-rose-500/20", dot: "bg-rose-400" },
-  blue: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20", dot: "bg-blue-400" },
+const colorMap: Record<string, { border: string; dot: string; text: string }> = {
+  emerald: { border: "border-emerald-500/20", dot: "bg-emerald-400", text: "text-emerald-400" },
+  cyan: { border: "border-cyan-500/20", dot: "bg-cyan-400", text: "text-cyan-400" },
+  indigo: { border: "border-indigo-500/20", dot: "bg-indigo-400", text: "text-indigo-400" },
+  amber: { border: "border-amber-500/20", dot: "bg-amber-400", text: "text-amber-400" },
+  rose: { border: "border-rose-500/20", dot: "bg-rose-400", text: "text-rose-400" },
+  blue: { border: "border-blue-500/20", dot: "bg-blue-400", text: "text-blue-400" },
 };
 
 const cliCommands = [
@@ -132,40 +144,24 @@ const gapSummary = [
   { severity: "Low", count: 9, color: "text-neutral-400" },
 ];
 
-const topRecommendations = [
-  { id: "R1", title: "API pagination + filtering", effort: "M", impact: 5, desc: "Cursor-based pagination on all list endpoints. Default limit 50, max 200." },
-  { id: "R11", title: "Agent timeout enforcement", effort: "S", impact: 4, desc: "Configurable max_duration per agent. Auto-stop with notification." },
-  { id: "R16", title: "E2E tests in CI", effort: "S", impact: 4, desc: "21 existing specs + mock agent infrastructure. Just needs CI job." },
-  { id: "R18", title: "Generate API docs from OpenAPI", effort: "S", impact: 4, desc: "Spec exists and is CI-verified. Low-hanging fruit." },
-  { id: "R4", title: "CLI --json output", effort: "M", impact: 4, desc: "Structured JSON output for all commands. Enables scripting." },
-];
-
-const newFeatures = [
-  { id: "F1", title: "Notification System", scope: "L", impact: 5, desc: "Desktop, webhook, Slack, terminal bell notifications for agent events." },
-  { id: "F2", title: "Dynamic Skill Loading", scope: "L", impact: 4, desc: "Load custom skills from external repos without recompilation." },
-  { id: "F5", title: "Webhook Extensibility", scope: "M", impact: 4, desc: "Outbound webhooks for all 11+ SSE event types." },
-  { id: "F4", title: "Agent Analytics Dashboard", scope: "M", impact: 4, desc: "Aggregate metrics: success rates, token costs, duration trends." },
-  { id: "F7", title: "GitHub Forge Support", scope: "XL", impact: 4, desc: "GitHub adapter implementing the same port interfaces as Gitea." },
-];
-
 const roadmapTiers = [
   {
     tier: "Tier 1: Immediate",
     timeframe: "Next 1-2 weeks",
     effort: "7-12 tracks",
-    items: ["API pagination + filtering", "E2E tests in CI", "API docs from OpenAPI", "Shell completions", "Remove deprecated kf-parallel", "Agent timeout enforcement", "CLI --json output"],
+    items: ["API pagination + filtering", "E2E tests in CI", "API docs from OpenAPI", "Shell completions", "Agent timeout enforcement", "CLI --json output"],
   },
   {
     tier: "Tier 2: Near-Term",
     timeframe: "Weeks 3-6",
     effort: "15-25 tracks",
-    items: ["Notification system", "Webhook extensibility", "Agent retry/recovery", "Keyboard shortcuts + command palette", "Enhanced TrackDetail page", "Trace visualization", "User guide", "Bulk operations"],
+    items: ["Notification system", "Webhook extensibility", "Agent retry/recovery", "Keyboard shortcuts", "Enhanced TrackDetail", "User guide"],
   },
   {
     tier: "Tier 3: Strategic",
     timeframe: "Weeks 7+",
     effort: "30-60 tracks",
-    items: ["Dynamic skill loading", "Agent analytics dashboard", "Agent scheduling", "Responsive/mobile dashboard", "GitHub forge support", "Multi-user support", "TUI mode"],
+    items: ["Dynamic skill loading", "Agent analytics", "GitHub forge support", "Multi-user support", "TUI mode"],
   },
 ];
 
@@ -173,27 +169,7 @@ function MaturityDots({ level }: { level: number }) {
   return (
     <div className="flex gap-1" title={`${level}/5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className={`w-2 h-2 rounded-full ${
-            i <= level ? "bg-emerald-400" : "bg-white/10"
-          }`}
-        />
-      ))}
-    </div>
-  );
-}
-
-function ImpactBar({ level }: { level: number }) {
-  return (
-    <div className="flex gap-0.5" title={`Impact: ${level}/5`}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className={`w-4 h-1.5 rounded-sm ${
-            i <= level ? "bg-cyan-400" : "bg-white/10"
-          }`}
-        />
+        <div key={i} className={`w-2 h-2 rounded-full ${i <= level ? "bg-emerald-400" : "bg-white/10"}`} />
       ))}
     </div>
   );
@@ -202,9 +178,7 @@ function ImpactBar({ level }: { level: number }) {
 function SectionHeading({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle?: string }) {
   return (
     <div className="flex items-start gap-4 mb-8">
-      <div className="p-3 glass-panel rounded-xl border border-white/10 shrink-0">
-        {icon}
-      </div>
+      <div className="p-3 glass-panel rounded-xl border border-white/10 shrink-0">{icon}</div>
       <div>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h2>
         {subtitle && <p className="text-neutral-400 mt-1">{subtitle}</p>}
@@ -216,12 +190,11 @@ function SectionHeading({ icon, title, subtitle }: { icon: React.ReactNode; titl
 export default function ReportPage() {
   return (
     <div className="min-h-screen font-sans selection:bg-neutral-800 selection:text-white flex flex-col">
-      {/* Background Grid */}
       <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
         <div className="absolute inset-0 bg-grid opacity-20" />
       </div>
 
-      {/* Navigation Bar */}
+      {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
@@ -233,12 +206,7 @@ export default function ReportPage() {
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Home</span>
             </Link>
-            <a
-              href="https://github.com/kiloforge/kiloforge"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10"
-            >
+            <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
               GitHub
             </a>
           </div>
@@ -250,38 +218,25 @@ export default function ReportPage() {
         <div className="mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            Early Alpha
+            Early Development &mdash; Conception to Alpha
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Status Report
           </h1>
           <p className="text-lg text-neutral-400 max-w-3xl leading-relaxed">
-            A comprehensive product audit covering Kiloforge&apos;s journey from conception to alpha deployment. This report captures the state of the CLI, REST API, Command Deck dashboard, embedded skills, and orchestration pipeline as of <span className="text-neutral-200 font-medium">March 10, 2026</span>.
+            A comprehensive report covering Kiloforge&apos;s journey from conception to alpha deployment in <span className="text-neutral-200 font-medium">5 days</span>. Includes project timeline, velocity metrics, SLOC analysis, cost estimates, and a full product audit of the CLI, REST API, Command Deck, and orchestration pipeline.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
-            <a
-              href="https://github.com/kiloforge/kiloforge"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-            >
+            <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
               <GitBranch className="w-4 h-4" />
               View on GitHub
               <ExternalLink className="w-3.5 h-3.5 text-neutral-500" />
             </a>
-            <Link
-              href="/report/full"
-              className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-            >
+            <Link href="/report/full" className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
               <FileText className="w-4 h-4" />
               Full Markdown Report
             </Link>
-            <a
-              href="https://github.com/kiloforge/kiloforge/tree/main/.agent/kf/_reports/product-audit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-            >
+            <a href="https://github.com/kiloforge/kiloforge/blob/main/.agent/kf/_reports/2026-03-11-full-report.md" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-neutral-300 bg-white/5 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
               <FileText className="w-4 h-4" />
               Source on GitHub
               <ExternalLink className="w-3.5 h-3.5 text-neutral-500" />
@@ -289,15 +244,177 @@ export default function ReportPage() {
           </div>
         </div>
 
+        {/* ═══════════ PROJECT TIMELINE ═══════════ */}
+
+        {/* Hero Stats */}
+        <section className="mb-20">
+          <SectionHeading
+            icon={<Zap className="w-6 h-6 text-amber-400" />}
+            title="At a Glance"
+            subtitle="March 7-11, 2026 — solo developer + Claude Code agent swarm"
+          />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {heroStats.map((s) => (
+              <div key={s.label} className="glass-panel rounded-xl p-6 border border-white/5 text-center hover:border-white/15 transition-colors">
+                <div className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-1">{s.value}</div>
+                <div className="text-sm text-neutral-300 font-medium">{s.label}</div>
+                <div className="text-xs text-neutral-600 mt-0.5">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Cost headline */}
+          <div className="glass-panel rounded-xl p-6 border border-emerald-500/20 bg-emerald-500/[0.03]">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-emerald-400" />
+                </div>
+                <div>
+                  <div className="text-sm text-neutral-400">Actual cost (AI-assisted)</div>
+                  <div className="text-2xl font-bold text-emerald-400">~$200 &ndash; $500</div>
+                </div>
+              </div>
+              <div className="hidden md:block w-px h-12 bg-white/10" />
+              <div>
+                <div className="text-sm text-neutral-400">Median industry estimate</div>
+                <div className="text-2xl font-bold text-neutral-300">~$680,000</div>
+              </div>
+              <div className="hidden md:block w-px h-12 bg-white/10" />
+              <div>
+                <div className="text-sm text-neutral-400">Efficiency factor</div>
+                <div className="text-2xl font-bold text-cyan-400">~1,360x &ndash; 3,400x</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Daily Activity */}
+        <section className="mb-20">
+          <SectionHeading
+            icon={<Clock className="w-6 h-6 text-cyan-400" />}
+            title="Daily Activity"
+            subtitle="5 days of accelerating velocity"
+          />
+          <div className="space-y-3">
+            {dailyActivity.map((d) => (
+              <div key={d.date} className="glass-panel rounded-xl p-5 border border-white/5 hover:border-white/15 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm font-mono text-neutral-300 w-14">{d.date}</span>
+                    <span className="text-xs text-neutral-600 w-8">{d.day}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                      <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all" style={{ width: `${d.barPct}%` }} />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0 text-xs">
+                    <span className="text-neutral-400"><span className="text-neutral-200 font-semibold">{d.commits}</span> commits</span>
+                    <span className="text-neutral-400"><span className="text-emerald-400 font-semibold">{d.tracks}</span> tracks</span>
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-500 sm:ml-[5.5rem]">{d.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Velocity */}
+        <section className="mb-20">
+          <SectionHeading
+            icon={<TrendingUp className="w-6 h-6 text-emerald-400" />}
+            title="Velocity Progression"
+            subtitle="2.6x week-over-week speedup from parallel worktree swarm"
+          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {velocityStats.map((v) => (
+              <div key={v.label} className="glass-panel rounded-xl p-4 border border-white/5 hover:border-white/15 transition-colors">
+                <div className="text-xl font-bold tracking-tight text-white mb-1">{v.value}</div>
+                <div className="text-xs text-neutral-500">{v.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SLOC Breakdown */}
+        <section className="mb-20">
+          <SectionHeading
+            icon={<Code2 className="w-6 h-6 text-indigo-400" />}
+            title="Codebase Composition"
+            subtitle="81,059 SLOC across 620 files"
+          />
+          <div className="glass-panel rounded-xl p-6 border border-white/5 mb-4">
+            {/* Stacked bar */}
+            <div className="flex rounded-lg overflow-hidden h-6 mb-6">
+              {slocBreakdown.map((s) => (
+                <div key={s.lang} className={`${s.color} transition-all`} style={{ width: `${s.pct}%` }} title={`${s.lang}: ${s.sloc} (${s.pct}%)`} />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {slocBreakdown.map((s) => (
+                <div key={s.lang} className="flex items-center gap-2">
+                  <span className={`w-3 h-3 rounded-sm ${s.color} shrink-0`} />
+                  <span className="text-sm text-neutral-300">{s.lang}</span>
+                  <span className="text-xs text-neutral-600 ml-auto font-mono">{s.sloc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Cost Estimates */}
+        <section className="mb-20">
+          <SectionHeading
+            icon={<DollarSign className="w-6 h-6 text-emerald-400" />}
+            title="Cost Estimates"
+            subtitle="Cross-model range: $175K - $2.73M"
+          />
+          <div className="glass-panel rounded-xl border border-white/5 overflow-hidden mb-4">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 text-left text-neutral-500 text-xs uppercase tracking-wider">
+                    <th className="px-4 py-3">Model</th>
+                    <th className="px-4 py-3">Mid Estimate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {costComparison.map((c) => (
+                    <tr key={c.model} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-2.5 text-neutral-300">{c.model}</td>
+                      <td className="px-4 py-2.5 text-neutral-200 font-mono">{c.mid}</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-emerald-500/[0.05]">
+                    <td className="px-4 py-2.5 text-emerald-400 font-semibold">Actual (AI-assisted)</td>
+                    <td className="px-4 py-2.5 text-emerald-400 font-mono font-bold">~$200 - $500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-600 leading-relaxed">
+            Estimates via COCOMO organic model, function point analysis (351 adjusted FPs), parametric SLOC-based ($75-150/hr), and effort by analogy. Median: ~$680K. Geometric mean: ~$764K.
+          </p>
+        </section>
+
+        {/* ═══════════ PRODUCT AUDIT ═══════════ */}
+
+        <div className="border-t border-white/10 pt-16 mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Product Audit</h2>
+          <p className="text-neutral-400">Feature inventory, maturity ratings, gap analysis, and roadmap</p>
+        </div>
+
         {/* Product Snapshot */}
         <section className="mb-20">
           <SectionHeading
             icon={<Gauge className="w-6 h-6 text-cyan-400" />}
-            title="Product Snapshot"
+            title="Architecture Snapshot"
             subtitle="Key metrics at the alpha milestone"
           />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {snapshot.map((item) => (
+            {productSnapshot.map((item) => (
               <div key={item.label} className="glass-panel rounded-xl p-4 border border-white/5 hover:border-white/15 transition-colors">
                 <div className="text-2xl font-bold tracking-tight text-white mb-1">{item.value}</div>
                 <div className="text-xs text-neutral-500">{item.label}</div>
@@ -350,9 +467,7 @@ export default function ReportPage() {
                 <tbody>
                   {cliCommands.map((c) => (
                     <tr key={c.cmd} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 py-2.5">
-                        <code className="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-xs">kf {c.cmd}</code>
-                      </td>
+                      <td className="px-4 py-2.5"><code className="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-xs">kf {c.cmd}</code></td>
                       <td className="px-4 py-2.5 text-neutral-400 text-xs">{c.cat}</td>
                       <td className="px-4 py-2.5"><MaturityDots level={c.maturity} /></td>
                       <td className="px-4 py-2.5 text-neutral-500 text-xs hidden sm:table-cell">{c.note}</td>
@@ -424,7 +539,7 @@ export default function ReportPage() {
           </div>
         </section>
 
-        {/* Gap Analysis Summary */}
+        {/* Gap Analysis */}
         <section className="mb-20">
           <SectionHeading
             icon={<Activity className="w-6 h-6 text-red-400" />}
@@ -460,62 +575,10 @@ export default function ReportPage() {
           </div>
         </section>
 
-        {/* Top Recommendations */}
-        <section className="mb-20">
-          <SectionHeading
-            icon={<Puzzle className="w-6 h-6 text-cyan-400" />}
-            title="Top Recommendations"
-            subtitle="Highest-impact improvements to existing features"
-          />
-          <div className="space-y-3">
-            {topRecommendations.map((r) => (
-              <div key={r.id} className="glass-panel rounded-xl p-5 border border-white/5 hover:border-white/15 transition-colors">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">{r.id}</span>
-                    <h3 className="font-semibold text-neutral-200">{r.title}</h3>
-                  </div>
-                  <div className="flex items-center gap-4 sm:ml-auto shrink-0">
-                    <span className="text-xs text-neutral-500">Effort: <span className="text-neutral-300 font-medium">{r.effort}</span></span>
-                    <ImpactBar level={r.impact} />
-                  </div>
-                </div>
-                <p className="text-xs text-neutral-500 leading-relaxed">{r.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* New Feature Proposals */}
-        <section className="mb-20">
-          <SectionHeading
-            icon={<TestTube className="w-6 h-6 text-violet-400" />}
-            title="New Feature Proposals"
-            subtitle="Net-new capabilities on the roadmap"
-          />
-          <div className="space-y-3">
-            {newFeatures.map((f) => (
-              <div key={f.id} className="glass-panel rounded-xl p-5 border border-white/5 hover:border-white/15 transition-colors">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded">{f.id}</span>
-                    <h3 className="font-semibold text-neutral-200">{f.title}</h3>
-                  </div>
-                  <div className="flex items-center gap-4 sm:ml-auto shrink-0">
-                    <span className="text-xs text-neutral-500">Scope: <span className="text-neutral-300 font-medium">{f.scope}</span></span>
-                    <ImpactBar level={f.impact} />
-                  </div>
-                </div>
-                <p className="text-xs text-neutral-500 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Roadmap */}
         <section className="mb-20">
           <SectionHeading
-            icon={<GitBranch className="w-6 h-6 text-emerald-400" />}
+            icon={<Puzzle className="w-6 h-6 text-cyan-400" />}
             title="Prioritized Roadmap"
             subtitle="Three tiers from immediate to strategic"
           />
@@ -536,9 +599,7 @@ export default function ReportPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tier.items.map((item) => (
-                    <span key={item} className="text-xs bg-white/5 border border-white/10 text-neutral-300 px-3 py-1.5 rounded-lg">
-                      {item}
-                    </span>
+                    <span key={item} className="text-xs bg-white/5 border border-white/10 text-neutral-300 px-3 py-1.5 rounded-lg">{item}</span>
                   ))}
                 </div>
               </div>
@@ -555,20 +616,13 @@ export default function ReportPage() {
               Kiloforge is open source. Dive into the codebase, read the full report, or install and try it yourself.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="https://github.com/kiloforge/kiloforge"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-emerald-500/25"
-              >
+              <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-emerald-500/25">
                 <GitBranch className="w-5 h-5" />
                 View on GitHub
               </a>
-              <Link
-                href="/#install"
-                className="inline-flex items-center gap-2 text-neutral-300 bg-white/5 border border-white/10 px-8 py-3 rounded-xl hover:bg-white/10 transition-colors font-medium"
-              >
-                Install Kiloforge
+              <Link href="/report/full" className="inline-flex items-center gap-2 text-neutral-300 bg-white/5 border border-white/10 px-8 py-3 rounded-xl hover:bg-white/10 transition-colors font-medium">
+                <FileText className="w-5 h-5" />
+                Full Markdown Report
               </Link>
             </div>
           </div>
@@ -585,9 +639,7 @@ export default function ReportPage() {
             </div>
             <span className="text-neutral-600 text-xs ml-8">
               Created by{" "}
-              <a href="https://blog.dev-kat.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">
-                Ben Baldivia
-              </a>
+              <a href="https://blog.dev-kat.com" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Ben Baldivia</a>
             </span>
           </div>
           <div className="flex gap-6">

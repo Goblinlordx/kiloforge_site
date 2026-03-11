@@ -8,367 +8,250 @@ import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
 
 const GITHUB_REPORT_URL =
-  "https://github.com/kiloforge/kiloforge/tree/main/.agent/kf/_reports/product-audit";
+  "https://github.com/kiloforge/kiloforge/blob/main/.agent/kf/_reports/2026-03-11-full-report.md";
 
-const reportMarkdown = `# Kiloforge Product Audit — Full Report
+const reportMarkdown = `# Project Report: Kiloforge
 
-**Date:** March 10, 2026
-**Scope:** Full product surface — CLI, REST API, Dashboard, Skills, Orchestration
-**Phase:** Conception to Alpha Deployment
-
----
-
-# Executive Summary
-
-## Product Snapshot
-
-| Dimension | Count |
-|-----------|-------|
-| Completed tracks | 172 |
-| Go SLOC (hand-written) | ~20,000 |
-| Go SLOC (generated) | ~12,000 |
-| Frontend SLOC | ~10,600 |
-| Go test SLOC | ~19,300 |
-| Go test files | 93 |
-| Frontend unit tests | 22 |
-| E2E test specs | 21 |
-| API operations | 49 |
-| SSE event types | 11+ |
-| Core services | 12 |
-| Adapter packages | 18 |
-| Port interfaces | 20 |
-| Domain models | 11 |
-| Frontend pages | 5 |
-| Frontend components | ~63 files |
-| Frontend hooks | 28 |
-| Embedded skills | 15 (1 deprecated) |
-| CI workflows | 3 |
-| Documentation files | 5 (~860 lines) |
-
-## Key Findings
-
-### Strengths
-
-1. **Exceptional test coverage** — 1:1 test-to-source ratio (19K test SLOC vs 20K source SLOC), 21 E2E specs, 93 Go test files
-2. **Clean architecture** — Strict port/adapter pattern, 12 services with clean separation, zero TODOs in source
-3. **Schema-first API** — OpenAPI 3.1 + AsyncAPI 3.0, code generation pipeline, verification in CI
-4. **Comprehensive real-time system** — 11+ SSE event types, WebSocket for agent interaction
-5. **Mature CI/CD** — Lint, test, deps verification, codegen verification across Go + frontend
-6. **Robust orchestration** — Dependency-aware work queue, merge lock with dual-mode (HTTP/mkdir), OpenTelemetry tracing
-
-### Critical Gaps
-
-1. **No API pagination** — All list endpoints return unbounded results. Will degrade with scale.
-2. **No notification system** — No alerts when agents complete, fail, or escalate. Users must poll the dashboard.
-3. **No plugin/extension system** — Skills are embedded at compile time. Third-party skills require forking.
-4. **E2E tests not in CI** — 21 E2E specs exist but aren't run in the CI pipeline
-5. **Limited documentation** — 5 docs files (~860 lines) for a product with 49 API endpoints and 20+ CLI commands. No API reference docs.
-
-### Top 5 Recommendations
-
-1. **Add API pagination and filtering** (Effort: M, Impact: 5) — Every list endpoint needs cursor/offset pagination and basic filtering. Without it, the product cannot scale beyond toy usage.
-2. **Build a notification/webhook system** (Effort: L, Impact: 5) — Agent completion, failure, and escalation events should trigger configurable notifications (desktop, webhook, email). This is the #1 UX gap for a tool that runs long-lived autonomous agents.
-3. **Add E2E tests to CI** (Effort: S, Impact: 4) — The 21 E2E specs should run in CI. This requires a headless browser setup but prevents UI regressions from landing.
-4. **Generate API reference documentation** (Effort: S, Impact: 4) — Auto-generate from OpenAPI spec. The schema already exists; this is low-hanging fruit.
-5. **Dynamic skill loading** (Effort: L, Impact: 4) — Allow loading skills from external repos or local directories without recompilation. Transforms kiloforge from a tool into a platform.
+> **Generated:** 2026-03-11
+> **Period:** 2026-03-07 – 2026-03-11
 
 ---
 
-# Feature Inventory
+## Project Timeline
 
-## Maturity Scale
+| | |
+|---|---|
+| **Duration** | 2026-03-07 – 2026-03-11 (5 calendar days, 5 active days) |
+| **Commits** | 1,552 total |
+| **Tracks** | ~348 lifetime (126 completed on-disk, 199 archived, 2 pending) |
+| **Codebase** | 39,652 lines Go · 21,170 lines TS/TSX · 7 SQL migrations |
 
-| Rating | Label | Meaning |
-|--------|-------|---------|
-| 5 | Mature | Production-quality, well-tested, good UX, documented |
-| 4 | Solid | Works well, minor polish needed |
-| 3 | Functional | Works but has noticeable gaps |
-| 2 | Basic | Minimum viable, needs significant work |
-| 1 | Stub | Exists but incomplete or broken |
+### Daily Activity
 
-## 1. CLI Commands
-
-| Command | Category | Maturity | Notes |
-|---------|----------|----------|-------|
-| \`init\` | Lifecycle | 5 | First-time setup with prereq checks, Docker compose, Gitea provisioning |
-| \`up\` | Lifecycle | 5 | Daily start with health checks |
-| \`down\` | Lifecycle | 5 | Clean shutdown |
-| \`destroy\` | Lifecycle | 4 | Nuclear reset; could use --force confirmation UX |
-| \`status\` | Lifecycle | 5 | Shows system health, Gitea status, running agents |
-| \`version\` | Lifecycle | 4 | VCS stamping; worktree edge case handled via Makefile |
-| \`add\` | Projects | 4 | Registers project, mirrors to Gitea, sets up webhooks |
-| \`projects\` | Projects | 4 | Lists registered projects |
-| \`push\` | Projects | 4 | Pushes to Gitea mirror |
-| \`sync\` | Projects | 4 | Git sync with origin |
-| \`agents\` | Agents | 4 | Lists active/recent agents |
-| \`logs\` | Agents | 4 | Streams agent logs |
-| \`stop\` | Agents | 4 | Stops running agent |
-| \`attach\` | Agents | 5 | WebSocket terminal attachment to running agent |
-| \`escalated\` | Agents | 3 | Lists escalated (permission-blocked) agents; niche UX |
-| \`cost\` | Agents | 4 | Token usage and cost tracking |
-| \`implement\` | Orchestration | 4 | Spawns agent to implement a track |
-| \`pool\` | Orchestration | 4 | Worker pool management for parallel agents |
-| \`dashboard\` | Orchestration | 5 | Opens dashboard in browser |
-| \`serve\` | Orchestration | 5 | Starts REST API server |
-| \`skills\` | Skills | 4 | Skill management (update, list) |
-
-**CLI Summary:** 21 commands, average maturity 4.3/5. Strong foundation.
-
-## 2. REST API
-
-| Category | Endpoints | Maturity | Notes |
-|----------|-----------|----------|-------|
-| System | 5 | 5 | Comprehensive health + preflight checks |
-| Agents | 8 | 4 | Missing: bulk operations, filtering on list |
-| Projects | 12 | 4 | Most complete category; missing pagination |
-| Tracks | 4 | 4 | Missing: update, bulk operations |
-| Board | 3 | 4 | Kanban operations |
-| Queue | 4 | 4 | Dependency-aware scheduling |
-| Locks | 4 | 5 | TTL + heartbeat pattern; well-designed |
-| Traces | 2 | 3 | No filtering, no pagination, no search |
-| Skills | 2 | 3 | Minimal CRUD |
-| Consent | 2 | 3 | Agent permission consent |
-| Admin | 1 | 3 | Single generic endpoint |
-| Quota | 1 | 4 | Token/cost aggregation |
-
-**API Summary:** 49 operations across 43 paths. Schema-first (OpenAPI 3.1) with code generation. Consistent error format.
-
-## 3. Dashboard (Frontend)
-
-| Page | Components | Maturity | Notes |
-|------|------------|----------|-------|
-| Overview | Stats, AgentGrid, Projects, QueuePanel, Tracks, Traces | 5 | Real-time updates via SSE |
-| AgentHistory | Filterable table, histogram | 4 | Good filtering; could use pagination |
-| AgentDetail | Metadata, DiffView, LogViewer, AgentTerminal | 5 | Rich detail view with WebSocket terminal |
-| ProjectPage | Kanban board, settings, info tabs | 4 | Board works well |
-| TrackDetail | Spec/plan display | 3 | Read-only display |
-| TracePage | Span timeline visualization | 3 | Basic span view |
-
-**Dashboard Summary:** 5 pages, 63 component files, React 19. Strong real-time foundation. 28 custom hooks, SSE integration, WebSocket terminal, TanStack Query.
-
-## 4. Embedded Skills
-
-| Skill | Purpose | Maturity |
-|-------|---------|----------|
-| kf-architect | Research codebase, create tracks with specs/plans | 5 |
-| kf-developer | Implement tracks in worktree workflow | 5 |
-| kf-reviewer | PR review against track spec | 4 |
-| kf-implement | Execute tasks from a track plan (single-branch) | 4 |
-| kf-new-track | Create a single track with spec and plan | 4 |
-| kf-manage | Archive, restore, delete, rename tracks | 4 |
-| kf-setup | Initialize project with kiloforge artifacts | 4 |
-| kf-status | Display project status and next actions | 3 |
-| kf-report | Generate project timeline and velocity reports | 4 |
-| kf-product-advisor | Product strategy and recommendations | 3 |
-| kf-validate | Validate kiloforge artifacts | 4 |
-| kf-revert | Git-aware undo by work unit | 3 |
-| kf-bulk-archive | Archive all completed tracks | 4 |
-| kf-compact-archive | Remove archived track dirs, preserve git history | 4 |
-| kf-parallel | DEPRECATED — redirects to kf-architect/kf-developer | 1 |
-
-**Skills Summary:** 15 skills (1 deprecated), average maturity 3.8/5.
-
-## 5. Orchestration Pipeline
-
-| Component | Maturity | Notes |
-|-----------|----------|-------|
-| Agent spawning | 5 | Interactive and non-interactive modes, mock agent for testing |
-| Work queue | 5 | Dependency-aware scheduling, priority, start/stop controls |
-| Merge lock | 5 | Dual-mode (HTTP with TTL/heartbeat, mkdir fallback), crash recovery |
-| PR lifecycle | 4 | Create, review, merge via Gitea |
-| OpenTelemetry tracing | 4 | Span creation across agent lifecycle |
-| SSE event bus | 5 | 11+ event types, reconnect handling, project scoping |
-| WebSocket terminal | 5 | Real-time agent interaction |
-| Cleanup service | 4 | Automatic resource cleanup |
-| Git sync | 4 | Bidirectional sync with origin |
+| Date | Commits | Span | Tracks Completed | Key Activity |
+|------|--------:|------|:----------------:|--------------|
+| 2026-03-07 (Sat) | 95 | 17:03–23:59 | **14** | feat(agent): quota tracker with thread-safe aggregation; feat(agent): stream-json parser for CC output; fix: named Docker volume and unauthenticated health check |
+| 2026-03-08 (Sun) | 292 | 00:00–23:49 | **58** | feat(ui): Kiloforge favicon; feat(routing): dashboard at /, Gitea at /gitea/; fix(test): update gitea client paths |
+| 2026-03-09 (Mon) | 317 | 00:03–21:53 | **76** | feat(fe): diff viewer into AgentCard; feat(fe): diff viewer components — FileList, FileDiff; fix: WebSocket session context inheritance |
+| 2026-03-10 (Tue) | 560 | 05:05–23:59 | **126** | feat(history): recovery status filters; feat(detail-page): recovery info and replace action; fix(ci): skip TestResumeDeveloper when CLI unavailable |
+| 2026-03-11 (Wed) | 288 | 00:00–08:58 | **74** | feat(db): persist MirrorDir in SQLite; feat(cli): update destroy prompt for external mirrors; fix(agent): wire sessionIDCallback in SpawnInteractive |
 
 ---
 
-# Gap Analysis
+## Velocity Progression
 
-## Summary by Severity
+| Period | Commits | Description |
+|--------|--------:|-------------|
+| Week 10 (2026-03-07 – 2026-03-08) | 387 | Project bootstrap through initial dashboard; 72 tracks completed |
+| Week 11 (2026-03-09 – 2026-03-11) | 1,165 | Parallel worktree scaling, feature blitz, reliability hardening; 276 tracks completed |
 
-| Severity | Count |
-|----------|-------|
-| Critical | 2 |
-| High | 12 |
-| Medium | 16 |
-| Low | 9 |
-| **Total** | **39** |
-
-## Critical Gaps
-
-| Gap | Description |
-|-----|-------------|
-| No API pagination | All list endpoints return unbounded results. With 172+ tracks and growing agent history, this will cause performance degradation and potential OOM. |
-| No notification system | Users get no alerts when agents complete, fail, escalate, or require attention. Must actively monitor the dashboard. |
-
-## High-Severity Gaps
-
-| Gap | Category |
-|-----|----------|
-| No API filtering/sorting | Scale & Performance |
-| No log search/aggregation | Observability |
-| No agent timeout enforcement | Agent Management |
-| No automatic retry/recovery | Agent Management |
-| No responsive/mobile design | User Experience |
-| No keyboard shortcuts | User Experience |
-| No dynamic skill loading | Extensibility |
-| No webhook extensibility | Extensibility |
-| No API reference docs | Documentation |
-| No user guide | Documentation |
-| E2E tests not in CI | Testing |
-| No API authentication | Security |
+| Metric | Value |
+|--------|-------|
+| Commits/day (active) | ~310 avg |
+| Peak | 560 commits on 2026-03-10 (parallel worktree swarm peak) |
+| Week 10 track rate | ~36 tracks/day avg |
+| Week 11 track rate | ~92 tracks/day avg **(2.6x speedup)** |
+| Peak track completions | **126** tracks on 2026-03-10 |
 
 ---
 
-# Improvement Recommendations
+## Project Phases
 
-## Effort Scale
+### Phase 1: Bootstrap & Architecture — *2026-03-07*
+- Project inception: conductor-relay renamed to crelay/kiloforge
+- Docker Compose integration, Gitea setup, init/destroy commands
+- Config refactored to port/adapter pattern
+- Agent spawning and stream-JSON parsing
+- 95 commits
 
-| Size | Meaning |
-|------|---------|
-| S | < 1 day (1-2 tracks) |
-| M | 1-3 days (2-4 tracks) |
-| L | 3-7 days (4-8 tracks) |
-| XL | 1-2 weeks (8+ tracks) |
+### Phase 2: Dashboard & Core Features — *2026-03-08*
+- React dashboard with Kanban board, agent cards, SSE real-time updates
+- Routing, favicon, theme, track generation UI
+- Agent lifecycle management (spawn, stop, completion callbacks)
+- Worktree build fixes, CI pipeline setup
+- 292 commits
 
-## Top Recommendations
+### Phase 3: Feature Blitz & E2E Testing — *2026-03-09*
+- Diff viewer, interactive terminal, error toasts, admin operations
+- 12 end-to-end test tracks implemented
+- Agent permissions, consent dialogs, random names
+- Embedded skills, WebSocket relay
+- 317 commits
 
-| # | Item | Effort | Impact | Description |
-|---|------|--------|--------|-------------|
-| R1 | API pagination + filtering | M | 5 | Cursor-based pagination with \`?cursor=X&limit=N\`. Default limit: 50, max: 200. |
-| R2 | API filtering and sorting | M | 4 | Query parameters: \`?status=running\`, \`?project=myproject\`, \`?sort=created_at\` |
-| R4 | CLI --json output | M | 4 | Global \`--json\` flag for all commands. Enables scripting. |
-| R5 | Shell completions | S | 3 | \`kf completion bash|zsh|fish\`. Nearly free with Cobra. |
-| R7 | Keyboard shortcuts + command palette | M | 4 | Global Cmd+K palette, hotkeys for common actions. |
-| R11 | Agent timeout enforcement | S | 4 | Configurable \`max_duration\` per agent. Default: 2 hours. |
-| R12 | Automatic retry for failed agents | M | 4 | Configurable retry policy with exponential backoff. |
-| R16 | E2E tests in CI | S | 4 | Headless Playwright step with mock agent binary. |
-| R18 | API docs from OpenAPI | S | 4 | Redoc/Swagger UI generation from existing spec. |
-| R19 | Comprehensive user guide | M | 4 | Full guide: installation, first project, agent workflow, troubleshooting. |
+### Phase 4: Parallel Scaling & Polish — *2026-03-10*
+- Peak velocity: 560 commits, 126 tracks completed in single day
+- Analytics, agent recovery, work stash, branch diff view
+- Dashboard theme alignment, design guide
+- Architecture review, CI reliability hardening
+- SDK adoption, board layout improvements
+- 560 commits
 
----
-
-# New Feature Proposals
-
-## F1. Notification System
-- **Scope:** L (4-6 tracks) | **Impact:** 5/5
-- Channels: desktop (macOS Notification Center), webhook, Slack, terminal bell
-- Events: agent_completed, agent_failed, agent_escalated, agent_timeout, queue_empty, merge_conflict
-- Transforms kiloforge from "monitor it" to "fire and forget"
-
-## F2. Dynamic Skill Loading
-- **Scope:** L (6-8 tracks) | **Impact:** 4/5
-- Scan \`~/.claude/skills/kf-*\` directories for SKILL.md files
-- Install from git repo or local path, update, uninstall, enable/disable
-- Turns kiloforge from a tool into a platform
-
-## F3. Multi-User Support
-- **Scope:** XL (10+ tracks) | **Impact:** 4/5
-- Authentication (API key or OAuth), role-based authorization
-- Per-user agent quotas and cost tracking, audit logging
-
-## F4. Agent Analytics Dashboard
-- **Scope:** M (3-4 tracks) | **Impact:** 4/5
-- Aggregate metrics: success rates, token costs, duration trends
-- Charts: cost over time, success/failure rate, duration distribution
-
-## F5. Webhook Extensibility
-- **Scope:** M (2-3 tracks) | **Impact:** 4/5
-- Configurable webhook targets with event filtering
-- Retry policy with exponential backoff
-
-## F6. Agent Scheduling
-- **Scope:** M (3-4 tracks) | **Impact:** 3/5
-- Cron-like scheduling for recurring agent runs
-- Nightly reviews, weekly dependency updates, daily coverage reports
-
-## F7. GitHub Forge Support
-- **Scope:** XL (8+ tracks) | **Impact:** 4/5
-- GitHub adapter implementing same port interfaces as Gitea
-- PR lifecycle, webhook handling, branch protection
-
-## F8. CLI Interactive Mode (TUI)
-- **Scope:** L (6-8 tracks) | **Impact:** 3/5
-- charmbracelet/bubbletea for terminal UI
-- Agent list, log viewer, project status, queue monitor
+### Phase 5: Hardening & Release Prep — *2026-03-11*
+- User mirror (BE/FE), project creation, advisor hub
+- CI green track, lint enforcement, documentation overhaul
+- Cortex rebrand, branding cleanup
+- Agent interrupt, idle suspend, diff panel features queued
+- 288 commits
 
 ---
 
-# Prioritized Roadmap
+## Track Summary
 
-## Tier 1: Immediate (Next 1-2 Weeks)
+### Counts
 
-| # | Item | Effort | Impact |
-|---|------|--------|--------|
-| 1 | API pagination + filtering | M | 5 |
-| 2 | E2E tests in CI | S | 4 |
-| 3 | Generate API docs from OpenAPI | S | 4 |
-| 4 | Shell completions | S | 3 |
-| 5 | Remove deprecated kf-parallel | S | 2 |
-| 6 | Agent timeout enforcement | S | 4 |
-| 7 | CLI --json output | M | 4 |
+| Category | Count |
+|----------|------:|
+| Completed (current on-disk) | 126 |
+| Archived (on-disk) | 199 |
+| Pending (not started) | 2 |
+| **Lifetime total** | **~348** |
 
-**Estimated effort:** ~1-2 weeks of agent work (7-12 tracks)
+### Pending Tracks
 
-## Tier 2: Near-Term (Weeks 3-6)
+1. **fix-agent-resume-session-id-be** — Fix agent resume — capture real Claude session ID from SDK
+2. **user-mirror-fe** — Surface mirror directory in Command Deck UI
 
-| # | Item | Effort | Impact |
-|---|------|--------|--------|
-| 8 | Notification system | L | 5 |
-| 9 | Webhook extensibility | M | 4 |
-| 10 | Agent retry/recovery | M | 4 |
-| 11 | Keyboard shortcuts + command palette | M | 4 |
-| 12 | Enhanced TrackDetail page | M | 3 |
-| 13 | Trace visualization improvements | M | 3 |
-| 14 | User guide | M | 4 |
-| 15 | Bulk operations | S | 3 |
+### Blockers
 
-**Estimated effort:** ~3-4 weeks of agent work (15-25 tracks)
+No blockers identified.
 
-## Tier 3: Strategic (Weeks 7+)
+---
 
-| # | Item | Effort | Impact |
-|---|------|--------|--------|
-| 16 | Dynamic skill loading | L | 4 |
-| 17 | Agent analytics dashboard | M | 4 |
-| 18 | Agent scheduling | M | 3 |
-| 19 | Responsive/mobile dashboard | L | 3 |
-| 20 | GitHub forge support | XL | 4 |
-| 21 | Multi-user support | XL | 4 |
-| 22 | TUI mode | L | 3 |
+## SLOC Report
 
-**Estimated effort:** 6-12 weeks of agent work (30-60 tracks)
+> **Tool:** scc
+> **Excludes:** node_modules, vendor, .git, .agent, rest/gen, storagev1, dist
 
-## Dependency Graph
+| Language | Files | Code | Comments | Blanks | Lines | Complexity |
+|----------|------:|-----:|---------:|-------:|------:|-----------:|
+| Go | 281 | 39,652 | 2,643 | 6,285 | 48,580 | 9,679 |
+| TypeScript | 209 | 21,170 | 980 | 2,971 | 25,121 | 1,747 |
+| CSS | 59 | 6,636 | 74 | 1,075 | 7,785 | 0 |
+| Markdown | 45 | 8,968 | 0 | 3,539 | 12,507 | 0 |
+| YAML | 9 | 3,919 | 5 | 217 | 4,141 | 0 |
+| SQL | 7 | 181 | 16 | 19 | 216 | 0 |
+| JSON | 4 | 102 | 0 | 4 | 106 | 0 |
+| Shell | 2 | 125 | 15 | 34 | 174 | 9 |
+| Makefile | 1 | 100 | 6 | 21 | 127 | 45 |
+| JavaScript | 1 | 31 | 3 | 1 | 35 | 0 |
+| HTML | 1 | 15 | 0 | 0 | 15 | 0 |
+| License | 1 | 160 | 0 | 31 | 191 | 0 |
+| **TOTAL** | **620** | **81,059** | **3,742** | **14,197** | **98,998** | **11,480** |
 
-\`\`\`
-Tier 1: API pagination (R1) ──┐
-                               ├── R10 (search/filtering in dashboard)
-Tier 1: API filtering (R2) ───┘
+**Processed:** 2.84 MB
 
-Tier 1: Agent timeout (R11) ──── Tier 2: Agent retry (R12)
+### Breakdown
 
-Tier 2: Notifications (F1) ──── Tier 2: Webhooks (F5)
-                               └── Tier 3: Scheduling (F6)
+| Category | SLOC | Share |
+|----------|-----:|------:|
+| Backend (Go) | 39,652 | 49% |
+| Frontend (TS/CSS/HTML) | 27,852 | 34% |
+| Config/Infra (YAML/Shell/Makefile) | 4,144 | 5% |
+| Schema/DB (SQL) | 181 | 0% |
+| Docs (Markdown) | 8,968 | 11% |
+| Other (JSON/JS/License) | 293 | 0% |
 
-Tier 2: Bulk ops (R3) ──── Tier 2: Keyboard shortcuts (R7)
+---
 
-Tier 3: Dynamic skills (F2) ──── Tier 3: Multi-user (F3)
-                                          └── API auth (prerequisite)
-\`\`\`
+## Cost Estimates
 
-## Total Estimated Impact
+### COCOMO (organic model, via scc)
 
-If all Tier 1 + Tier 2 items are completed:
-- **Scale:** Product can handle 1000+ agents/tracks without performance issues
-- **UX:** Users notified of all events, keyboard-driven workflow, rich search
-- **Reliability:** Agent timeout + retry enables true unattended operation
-- **Adoption:** API docs + user guide lower the onboarding barrier
-- **Integration:** Webhook extensibility connects kiloforge to the broader toolchain
+| Metric | Value |
+|--------|-------|
+| Estimated Cost | $2,727,951 |
+| Schedule Effort | 20.14 months |
+| People Required | 12.03 |
 
-Tier 3 items transform kiloforge from a **power-user tool** into a **team platform** with community ecosystem potential.
+### Function Point Analysis
+
+| Component | Count | Weight | Total |
+|-----------|------:|-------:|------:|
+| External Inputs (EI) | 22 | x 4 | 88 |
+| External Outputs (EO) | 12 | x 5 | 60 |
+| External Inquiries (EQ) | 18 | x 4 | 72 |
+| Internal Logical Files (ILF) | 7 | x 10 | 70 |
+| External Interface Files (EIF) | 5 | x 7 | 35 |
+| **Unadjusted Function Points** | | | **325** |
+
+> **EI (22):** CLI commands (init, destroy, add, status, up, down, spawn, stop, resume, board), REST API endpoints (agents CRUD, projects CRUD, tracks, board, notifications, analytics, advisor launch), webhook receiver, file upload
+> **EO (12):** SSE event streams, agent output streaming, diff views, notification toasts, analytics charts, board state, CSV/report export, health endpoint, quota metrics
+> **EQ (18):** Agent list/detail/history, project list/detail, track list/status, board columns, notification list, analytics queries, advisor results, log tailing, migration status, config queries
+> **ILF (7):** SQLite tables — agents, projects, tracks, work_queue, notifications, reliability_events, migrations
+> **EIF (5):** Docker/Gitea API, Claude Code CLI, filesystem/git, SSH keys, OpenAPI schema
+
+| Metric | Value |
+|--------|-------|
+| Value Adjustment Factor | 1.08 (GSC: 43/70) |
+| Adjusted Function Points | 351 |
+
+> **GSC Breakdown (43/70):** Data communications (5), Distributed processing (3), Performance (3), Config complexity (4), Transaction rate (4), Online entry (4), End-user efficiency (4), Online update (3), Complex processing (3), Reusability (3), Installation ease (2), Operational ease (2), Multiple sites (1), Facilitate change (2)
+
+| Rate | Estimate |
+|------|----------|
+| Low ($500/FP) | $175,500 |
+| Mid ($1,000/FP) | $351,000 |
+| High ($1,500/FP) | $526,500 |
+
+### Parametric (SLOC-based)
+
+| Metric | Value |
+|--------|-------|
+| SLOC | 81,059 (functional code) |
+| Productivity range | 10–20 SLOC/hr |
+| Effort | 4,053 – 8,106 hours |
+| Cost @ $75–150/hr | $303,975 – $1,215,900 |
+
+### Effort by Analogy
+
+> Comparable scope: Local dev platform with Go backend (REST + SSE + WebSocket), React dashboard, Docker orchestration, embedded Gitea git forge, SQLite persistence, CLI tooling, AI agent spawning and lifecycle management, real-time observability
+
+| Context | Estimate |
+|---------|----------|
+| Freelance/agency | $200,000 – $500,000 |
+| In-house team (5–6 months) | $400,000 – $800,000 |
+
+### AI-Assisted Actual Cost
+
+| Metric | Value |
+|--------|-------|
+| Active dev time | 5 days (5 calendar days) |
+| Estimated API cost | ~$200 – $500 |
+| Human time | Solo developer + Claude Code agent swarm; human provides direction and review |
+
+### Aggregate Cost Summary
+
+| Model | Low | Mid | High |
+|-------|----:|----:|-----:|
+| COCOMO | — | $2,727,951 | — |
+| Function Point Analysis | $175,500 | $351,000 | $526,500 |
+| Parametric (SLOC) | $303,975 | $759,938 | $1,215,900 |
+| Effort by Analogy | $200,000 | $600,000 | $800,000 |
+| **Cross-model range** | **$175,500** | **$1,109,722** | **$2,727,951** |
+
+| Aggregate Metric | Value |
+|------------------|-------|
+| Median estimate | ~$680,000 |
+| Geometric mean | ~$764,000 |
+| Actual (AI-assisted) | ~$200 – $500 |
+| **Efficiency factor** | **~1,360x – 3,400x cost reduction vs median** |
+
+---
+
+## Summary
+
+Built in **5 calendar days** with **1,552 commits** across **5 active days**.
+
+| Metric | Value |
+|--------|-------|
+| SLOC | 81,059 (Go, TypeScript, CSS) |
+| Files | 620 |
+| Tracks (lifetime) | ~348 |
+| Tracks completed | 126 (on-disk) + 199 archived |
+| Tracks pending | 2 |
+| SQL migrations | 7 |
+| Compaction points | 0 |
+| Peak velocity | 560 commits/day, 126 tracks/day (2026-03-10, parallel swarm) |
 `;
 
 const markdownComponents: Components = {
