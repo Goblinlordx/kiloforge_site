@@ -467,7 +467,7 @@ export default function SkillsPage() {
                   {singleThreadedSections.map((section) => (
                     <div
                       key={section.title}
-                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.03]"
                     >
                       <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
                       <div className="space-y-3">
@@ -556,7 +556,7 @@ export default function SkillsPage() {
                   {multiThreadedSections.map((section) => (
                     <div
                       key={section.title}
-                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.03]"
                     >
                       <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
                       <div className="space-y-3">
@@ -582,7 +582,7 @@ export default function SkillsPage() {
                   {multiProcessorSections.map((section) => (
                     <div
                       key={section.title}
-                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.03]"
                     >
                       <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
                       <div className="space-y-3">
