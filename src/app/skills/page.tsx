@@ -64,7 +64,7 @@ const workflowSteps = [
     icon: <Layers className="w-6 h-6" />,
     color: "cyan",
     description:
-      "Tell the architect what you want to build or change. You can provide a prompt describing your intent, or omit it and the agent will ask. It researches your codebase, then produces a high-level plan broken into tracks — scoped work packages with specs and implementation steps. You can approve, reject, or provide guidance before anything is created.",
+      "Tell the architect what you want to build or change. You can provide a prompt describing your intent, or omit it and the agent will ask. It researches your codebase, then creates a track — a detailed specification with acceptance criteria and a phased implementation plan that developer agents can pick up and execute. You can approve, reject, or provide guidance before anything is created.",
   },
   {
     number: "3",
