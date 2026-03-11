@@ -82,7 +82,7 @@ const workflowSteps = [
     icon: <Play className="w-6 h-6" />,
     color: "indigo",
     description:
-      "Hand a track ID to the developer agent and it implements the full specification — writing code, tests, and verifying everything passes. Multiple developers can run in parallel on independent tracks.",
+      "Hand a track ID to the developer agent and it materializes the intent you provided — turning your approved spec into working reality. Multiple developers can run in parallel on independent tracks.",
   },
 ];
 
