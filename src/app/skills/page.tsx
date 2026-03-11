@@ -129,6 +129,7 @@ const skillCategories = [
       { name: "kf-reviewer", desc: "Review PRs against track specs" },
       { name: "kf-validate", desc: "Validate project artifact consistency" },
       { name: "kf-data-guardian", desc: "Data integrity guard (embedded)" },
+      { name: "kf-merge-protocol", desc: "Merge protocol reference (embedded)" },
     ],
   },
   {
