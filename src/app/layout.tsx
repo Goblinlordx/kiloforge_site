@@ -40,7 +40,15 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kiloforge | Forge Code at the Speed of Thought",
     description: "Orchestration platform coordinating Claude Code swarms with the Cortex control plane and Command Deck.",
-    images: [`${BASE_URL}/og_image.png`],
+    images: [
+      {
+        url: `${BASE_URL}/og_image.png`,
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "Kiloforge AI Swarms",
+      },
+    ],
     creator: "@kiloforge",
   },
   icons: {
