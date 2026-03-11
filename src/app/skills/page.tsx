@@ -13,18 +13,15 @@ import {
   TerminalSquare,
   Sparkles,
   Layers,
-  GitBranch,
-  Search,
-  Wrench,
-  BarChart3,
-  Rocket,
   Settings,
-  FileText,
   ListChecks,
   Play,
+  Cpu,
+  Network,
 } from "lucide-react";
 
 type Platform = "unix" | "windows";
+type Mode = "single" | "multi" | "processor";
 
 const installCommands: Record<Platform, string> = {
   unix: "git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git /tmp/kf-skills && cp -r /tmp/kf-skills/kf-* ~/.claude/skills/ && rm -rf /tmp/kf-skills",
@@ -37,6 +34,12 @@ const platformMeta: Record<Platform, { icon: React.ReactNode; label: string }> =
   windows: { icon: <Monitor className="w-4 h-4" />, label: "Windows" },
 };
 
+const modeMeta: Record<Mode, { label: string; icon: React.ReactNode }> = {
+  single: { label: "Single-Threaded", icon: <Play className="w-4 h-4" /> },
+  multi: { label: "Multi-Threaded", icon: <Network className="w-4 h-4" /> },
+  processor: { label: "Multi-Processor", icon: <Cpu className="w-4 h-4" /> },
+};
+
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -47,45 +50,6 @@ const stagger = {
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-const workflowSteps = [
-  {
-    number: "1",
-    title: "Setup",
-    command: "/kf-setup",
-    icon: <Settings className="w-6 h-6" />,
-    color: "emerald",
-    description:
-      "An agent asks about your project — its purpose, tech stack, conventions, and goals. It creates metadata files that all other agents reference, and sets up a track registry to record planned work.",
-  },
-  {
-    number: "2",
-    title: "Architect",
-    command: "/kf-architect [prompt]",
-    icon: <Layers className="w-6 h-6" />,
-    color: "cyan",
-    description:
-      "Tell the architect what you want to build or change. You can provide a prompt describing your intent, or omit it and the agent will ask. It researches your codebase, then creates a track — a detailed specification with acceptance criteria and a phased implementation plan that developer agents can pick up and execute. You can approve, reject, or provide guidance before anything is created.",
-  },
-  {
-    number: "3",
-    title: "Status",
-    command: "/kf-status",
-    icon: <ListChecks className="w-6 h-6" />,
-    color: "amber",
-    description:
-      "See which tracks are ready to implement, taking into account dependency ordering and merge conflict risk. Status shows you exactly what can be worked on next and what is blocked.",
-  },
-  {
-    number: "4",
-    title: "Develop",
-    command: "/kf-developer <track-id>",
-    icon: <Play className="w-6 h-6" />,
-    color: "indigo",
-    description:
-      "Hand a track ID to the developer agent. The track provides sufficiently narrow context — scoped specs, acceptance criteria, and a phased plan — to facilitate implementation with a low likelihood of hallucination. The agent materializes the intent you provided into working reality. Multiple developers can run in parallel on independent tracks.",
-  },
-];
-
 const colorMap: Record<string, { bg: string; text: string; border: string; ring: string; dot: string }> = {
   emerald: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/20", ring: "ring-emerald-500/30", dot: "bg-emerald-400" },
   cyan: { bg: "bg-cyan-500/10", text: "text-cyan-400", border: "border-cyan-500/20", ring: "ring-cyan-500/30", dot: "bg-cyan-400" },
@@ -93,70 +57,203 @@ const colorMap: Record<string, { bg: string; text: string; border: string; ring:
   indigo: { bg: "bg-indigo-500/10", text: "text-indigo-400", border: "border-indigo-500/20", ring: "ring-indigo-500/30", dot: "bg-indigo-400" },
 };
 
-const skillCategories = [
+/* ── Flow diagram data ────────────────────────────────────────────────── */
+
+const flowNodes = [
+  { id: "setup", label: "Setup", command: "/kf-setup", color: "emerald", icon: <Settings className="w-5 h-5" />, optional: false },
+  { id: "architect", label: "Architect", command: "/kf-architect", color: "cyan", icon: <Layers className="w-5 h-5" />, optional: false },
+  { id: "status", label: "Status", command: "/kf-status", color: "amber", icon: <ListChecks className="w-5 h-5" />, optional: true },
+  { id: "develop", label: "Develop", command: "/kf-developer", color: "indigo", icon: <Play className="w-5 h-5" />, optional: false },
+];
+
+/* ── Guidance content per mode ─────────────────────────────────────────── */
+
+const singleThreadedSections = [
   {
-    title: "Getting Started",
-    icon: <Rocket className="w-5 h-5 text-emerald-400" />,
-    skills: [
-      { name: "kf-getting-started", desc: "Interactive project bootstrapper" },
-      { name: "kf-setup", desc: "Initialize project metadata and track registry" },
-      { name: "kf-interactive", desc: "General-purpose kf-aware assistant" },
+    title: "Building Confidence",
+    paragraphs: [
+      "Start here. Run a single agent at a time — architect a track, then hand it to a developer. Watch what comes back.",
+      "The goal is not to produce output at maximum speed. It is to understand the process and to build a calibrated sense of what agents produce given a well-scoped specification. When the architect writes a track with clear acceptance criteria and a phased plan, the developer follows it closely. You will find that the alignment between intent and implementation is higher than you expect. That confidence is the foundation everything else is built on.",
+      "As you build this intuition, pay attention to which kinds of work align well and which carry higher risk. Logic-heavy backend tasks — APIs, data models, business rules — tend to be highly predictable. Visual elements and UI work can drift further from expectations, especially when the spec describes aesthetics or layout nuance. Knowing where the risk sits lets you allocate your attention accordingly.",
+      "To mitigate it, write more specific acceptance criteria for visual work — reference existing components, specify spacing values, name the design tokens. Provide screenshots or describe the exact layout you want. The tighter the visual spec, the closer the output. For structural code, the spec can be looser because the constraints are more naturally enforced by types, tests, and APIs.",
     ],
   },
   {
-    title: "Architecture & Planning",
-    icon: <Layers className="w-5 h-5 text-cyan-400" />,
-    skills: [
-      { name: "kf-architect", desc: "Research codebase, create track specs" },
-      { name: "kf-new-track", desc: "Create a single track with spec and plan" },
-      { name: "kf-dispatch", desc: "AI swarm dispatcher for worker assignment" },
-    ],
-  },
-  {
-    title: "Development",
-    icon: <GitBranch className="w-5 h-5 text-indigo-400" />,
-    skills: [
-      { name: "kf-developer", desc: "Implement a track end-to-end" },
-      { name: "kf-implement", desc: "Execute individual tasks from a plan" },
-      { name: "kf-conflict-resolver", desc: "Resolve git merge conflicts" },
-      { name: "kf-revert", desc: "Undo by track, phase, or task" },
-    ],
-  },
-  {
-    title: "Review & Quality",
-    icon: <Search className="w-5 h-5 text-amber-400" />,
-    skills: [
-      { name: "kf-reviewer", desc: "Review PRs against track specs" },
-      { name: "kf-validate", desc: "Validate project artifact consistency" },
-      { name: "kf-data-guardian", desc: "Data integrity guard (embedded)" },
-      { name: "kf-merge-protocol", desc: "Merge protocol reference (embedded)" },
-    ],
-  },
-  {
-    title: "Management & Reporting",
-    icon: <BarChart3 className="w-5 h-5 text-rose-400" />,
-    skills: [
-      { name: "kf-status", desc: "Project status with dependency ordering" },
-      { name: "kf-manage", desc: "Archive, restore, delete, rename tracks" },
-      { name: "kf-report", desc: "Timeline, velocity, and cost reports" },
-      { name: "kf-bulk-archive", desc: "Archive all completed tracks" },
-      { name: "kf-compact-archive", desc: "Clean up archived track directories" },
-    ],
-  },
-  {
-    title: "Advisors & Repair",
-    icon: <Wrench className="w-5 h-5 text-purple-400" />,
-    skills: [
-      { name: "kf-advisor-product", desc: "Product strategy and competitive analysis" },
-      { name: "kf-advisor-reliability", desc: "Codebase reliability audit" },
-      { name: "kf-repair", desc: "System integrity audit and repair" },
+    title: "Work at the Decision Layer",
+    paragraphs: [
+      "At the rate you can instantiate new implementations, shipping code to some remote to run a CI process there makes no sense — ship it when you have time to ramp down and address issues en masse. The throughput can be far higher than any remote review pipeline can handle.",
+      "Your time is too valuable to spend at the wide end of the funnel, sifting through every change. Instead, work at the narrow end — where decisions have leverage. Determine which changes matter. Prune out the noise. Identify what actually delivers value to your users.",
+      "Kiloforge is not trying to be the best interface for chatting with a single agent — the CLI already does that well. It is designed to let you set individual agent sessions aside and focus on the high-level decisions that, presumably, only you can make.",
     ],
   },
 ];
 
+const multiThreadedSections = [
+  {
+    title: "Don't Become the Bottleneck",
+    paragraphs: [
+      "On every team — even small ones — implementation drift accumulates over time. Policies change. Architectural decisions get revised. Engineers make mistakes, and the result is what we politely call \"legacy\" code. This is normal.",
+      "What matters is whether the rate of mistakes is low enough that the cost of fixing them later is less than the cost of you reviewing every line in real time. That is the bet you are making: that the agents produce sufficiently reliable output that your time is better spent deciding what to build next than inspecting what was just built.",
+      "If you try to double-check every agent's work and demand perfection before moving on, you become the bottleneck — and the entire value proposition collapses.",
+    ],
+  },
+  {
+    title: "Automate Validation Ruthlessly",
+    paragraphs: [
+      "The cost of validating by hand is too high. Every opportunity you have to automate a check, take it.",
+      "Reliable, performant automated tests are what make the entire model work — they are the mechanism that keeps agent output trustworthy without requiring your eyes on every change. If you find yourself manually verifying something an agent produced, that is a signal: build a test for it.",
+      "Even having an agent run manual validation steps slows things down. Instead, direct your effort toward building out the test infrastructure so that verification happens automatically as part of the implementation cycle. The things you validate by hand today should become the automated checks of tomorrow.",
+      "This compounds — every test you add raises the floor of reliability for all future work.",
+    ],
+  },
+  {
+    title: "When Things Drift",
+    paragraphs: [
+      "They will. And that is fine.",
+      "When you notice structural misalignment in the project — increased interdependency, patterns diverging from conventions, accumulated inconsistencies — don't get dragged into fixing details by hand. Instead, treat it as a planning problem.",
+      "Use the architect to scope tracks that address the drift at scale. Add guidelines to your project specifications so future tracks account for the new direction. Run large-scale audits with advisors and ask for the output as actionable items — then feed those items back into the architect to generate corrective tracks.",
+      "You are managing a system, not editing files.",
+    ],
+  },
+];
+
+const multiProcessorSections = [
+  {
+    title: "You Will Find Some Limit",
+    paragraphs: [
+      "At some point, you will hit a limit. Maybe it is the mental overhead of managing multiple instances. Maybe it is lock contention during merge serialization. There will be a limit.",
+      "For me, it was the mental overhead of trying to keep everything in my head and manage it all at once. The skills are already set up to surface that information — helping you avoid scheduling tracks with dependency ordering concerns, flagging which tracks are independent but carry a high risk of merge conflicts.",
+      "At some point though, it is just too much. These were the types of problems Kiloforge was designed to address.",
+    ],
+  },
+  {
+    title: "Scaling Beyond What You Can Hold in Your Head",
+    paragraphs: [
+      "Kiloforge exists to let you manage more than you could without it. Surfacing meaningful information at a glance or with a hover. Giving you timelines on every track that gets implemented.",
+      "Letting you access the agent that implemented a specific track and question it about the decisions it made, so you can better control the high-level information you assess. Letting you see which tracks have been significantly slower than others and leverage that information to make the process better.",
+      "It is all about scaling further — being able to access even the smallest details in a way that feels difficult without the tooling.",
+    ],
+  },
+  {
+    title: "Why This Exists",
+    paragraphs: [
+      "There could always be another way to accomplish this goal. This just happened to be the one I chose.",
+      "Don't get too turned away by the lighthearted mask I've put over things — it was intentional. I've had an incredibly enjoyable time seeing how far I can push the limits. I think they can go so much further. We can go so much further.",
+      "I believe engineers can have a more enjoyable time doing what they do than could have ever been possible before. It might look like something many people will turn away from. But I believe it was designed to drive some serious value.",
+    ],
+  },
+];
+
+
+/* ── Flow Diagram Component ───────────────────────────────────────────── */
+
+function WorkflowFlow() {
+  return (
+    <div className="mb-12">
+      {/* Desktop: horizontal flow */}
+      <div className="hidden md:block">
+        <div className="relative">
+          {/* Main flow row */}
+          <div className="flex items-center justify-center gap-0">
+            {flowNodes.map((node, i) => {
+              const c = colorMap[node.color];
+              return (
+                <div key={node.id} className="flex items-center">
+                  {/* Node */}
+                  <div
+                    className={`relative flex flex-col items-center gap-2 px-5 py-4 rounded-2xl border ${
+                      node.optional
+                        ? "border-dashed border-white/10 opacity-60"
+                        : `${c.border} border-solid`
+                    } ${c.bg} transition-all min-w-[120px]`}
+                  >
+                    <div className={`${c.text}`}>{node.icon}</div>
+                    <span className="text-sm font-semibold text-white">{node.label}</span>
+                    <code className={`text-xs font-mono ${c.text}`}>{node.command}</code>
+                    {node.optional && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-medium text-neutral-500 bg-[#0a0a0a] px-2 rounded-full border border-white/5">
+                        optional
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Arrow between nodes */}
+                  {i < flowNodes.length - 1 && (
+                    <div className="flex items-center px-2 text-white/50">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bypass arrow: Architect → Develop (skipping Status) */}
+          <div className="flex justify-center mt-3">
+            <div className="relative flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/5 border border-dashed border-cyan-500/20">
+              <span className="text-xs text-cyan-400 font-medium">Architect</span>
+              <ArrowRight className="w-3 h-3 text-cyan-400/60" />
+              <span className="text-xs text-indigo-400 font-medium">Develop</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: vertical flow */}
+      <div className="md:hidden space-y-2">
+        {flowNodes.map((node, i) => {
+          const c = colorMap[node.color];
+          return (
+            <div key={node.id}>
+              <div
+                className={`flex items-center gap-4 px-4 py-3 rounded-xl border ${
+                  node.optional
+                    ? "border-dashed border-white/10 opacity-60"
+                    : `${c.border} border-solid`
+                } ${c.bg} relative`}
+              >
+                <div className={`${c.text} shrink-0`}>{node.icon}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-white">{node.label}</span>
+                    {node.optional && (
+                      <span className="text-[10px] font-medium text-neutral-500 bg-white/5 px-1.5 py-0.5 rounded-full">
+                        optional
+                      </span>
+                    )}
+                  </div>
+                  <code className={`text-xs font-mono ${c.text}`}>{node.command}</code>
+                </div>
+              </div>
+
+              {/* Arrow or bypass indicator */}
+              {i < flowNodes.length - 1 && (
+                <div className="flex items-center justify-center py-1">
+                  {i === 1 ? (
+                    /* After Architect: show both paths */
+                    <div className="flex flex-col items-center gap-0.5">
+                      <ArrowRight className="w-3 h-3 rotate-90 text-white/40" />
+                      <span className="text-[10px] text-cyan-400/60">or skip to Develop</span>
+                    </div>
+                  ) : (
+                    <ArrowRight className="w-3 h-3 rotate-90 text-white/40" />
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Page ────────────────────────────────────────────────────────── */
+
 export default function SkillsPage() {
   const [platform, setPlatform] = useState<Platform>("unix");
   const [copied, setCopied] = useState(false);
+  const [mode, setMode] = useState<Mode>("single");
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -270,7 +367,7 @@ export default function SkillsPage() {
           </div>
         </motion.div>
 
-        {/* How it Works — Core Workflow */}
+        {/* ── Become a Kiloforger ─────────────────────────────────────── */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -279,57 +376,226 @@ export default function SkillsPage() {
           className="mb-24"
         >
           <motion.div variants={fadeIn} className="text-center mb-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">How it Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              Become a{" "}
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                Kiloforger
+              </span>
+            </h2>
           </motion.div>
-          <motion.p variants={fadeIn} className="text-neutral-400 text-center max-w-2xl mx-auto mb-12">
-            Four skills form the core workflow. Everything else is supporting infrastructure.
+          <motion.p variants={fadeIn} className="text-neutral-400 text-center max-w-2xl mx-auto mb-10">
+            The skills are the same — how you use them changes as you scale.
+            Start single-threaded to learn the process, then level up.
           </motion.p>
 
-          <div className="space-y-4">
-            {workflowSteps.map((step, i) => {
-              const c = colorMap[step.color];
-              return (
-                <motion.div key={step.number} variants={fadeIn}>
-                  <div className={`glass-panel p-6 md:p-8 rounded-2xl border ${c.border} hover:bg-white/[0.02] transition-colors relative overflow-hidden`}>
-                    {/* Step connector line */}
-                    {i < workflowSteps.length - 1 && (
-                      <div className="absolute bottom-0 left-[2.75rem] md:left-[3.25rem] w-px h-4 bg-gradient-to-b from-white/10 to-transparent translate-y-full z-10 hidden md:block" />
-                    )}
+          {/* Mode Selector */}
+          <motion.div variants={fadeIn} className="flex justify-center mb-10">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
+              {(["single", "multi", "processor"] as Mode[]).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    mode === m
+                      ? "bg-white/10 text-white border border-white/15 shadow-sm"
+                      : "text-neutral-400 hover:text-neutral-200 border border-transparent"
+                  }`}
+                >
+                  {modeMeta[m].icon}
+                  <span className="hidden sm:inline">{modeMeta[m].label}</span>
+                  <span className="sm:hidden">{modeMeta[m].label.split("-")[0]}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
 
-                    <div className="flex items-start gap-5">
-                      {/* Icon */}
-                      <div className={`${c.bg} p-3 rounded-xl ${c.text} shrink-0 ring-1 ${c.ring}`}>
-                        {step.icon}
-                      </div>
+          {/* Mode Content */}
+          <AnimatePresence mode="wait">
+            {mode === "single" && (
+              <motion.div
+                key="single"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Flow Diagram */}
+                <WorkflowFlow />
 
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-3 mb-2">
-                          <span className={`text-xs font-bold uppercase tracking-wider ${c.text}`}>
-                            Step {step.number}
-                          </span>
-                          <h3 className="text-lg font-bold">{step.title}</h3>
+                {/* Getting Started */}
+                <div className="glass-panel p-6 md:p-8 rounded-2xl border border-emerald-500/20 mb-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
+                  <div className="relative z-10">
+                    <h3 className="text-lg font-bold mb-3 text-white">Getting Started</h3>
+                    <p className="text-sm text-neutral-400 leading-relaxed mb-4">
+                      One terminal. One agent at a time. This is your training ground.
+                    </p>
+                    <ol className="space-y-3 text-sm text-neutral-300">
+                      <li className="flex items-start gap-3">
+                        <span className="text-emerald-400 font-bold shrink-0">1.</span>
+                        <span>Install the skills (see above) and clone the repo you want to work on.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-emerald-400 font-bold shrink-0">2.</span>
+                        <div>
+                          Start Claude Code with permissions bypassed so the agent can work uninterrupted:
+                          <code className="block mt-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-emerald-400 font-mono text-xs">
+                            claude --dangerously-skip-permissions
+                          </code>
                         </div>
-                        <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                          {step.description}
-                        </p>
-                        <code className={`inline-block px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-sm ${c.text} font-mono`}>
-                          {step.command}
-                        </code>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-emerald-400 font-bold shrink-0">3.</span>
+                        <span>
+                          Run <code className="text-cyan-400 font-mono text-xs">/kf-setup</code> to initialize your project, then{" "}
+                          <code className="text-cyan-400 font-mono text-xs">/kf-architect</code> to create your first track.
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-emerald-400 font-bold shrink-0">4.</span>
+                        <span>
+                          Hand the track to{" "}
+                          <code className="text-cyan-400 font-mono text-xs">/kf-developer &lt;track-id&gt;</code> and watch the implementation unfold.
+                        </span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                {/* Guidance Sections */}
+                <div className="space-y-6">
+                  {singleThreadedSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                    >
+                      <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
+                      <div className="space-y-3">
+                        {section.paragraphs.map((p, i) => (
+                          <p key={i} className="text-sm text-neutral-400 leading-relaxed">{p}</p>
+                        ))}
                       </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
-                  {/* Arrow between steps */}
-                  {i < workflowSteps.length - 1 && (
-                    <div className="flex justify-center py-1 text-white/10">
-                      <ArrowRight className="w-4 h-4 rotate-90" />
+            {mode === "multi" && (
+              <motion.div
+                key="multi"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Getting Started with Worktrees */}
+                <div className="glass-panel p-6 md:p-8 rounded-2xl border border-cyan-500/20 mb-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent" />
+                  <div className="relative z-10">
+                    <h3 className="text-lg font-bold mb-3 text-white">Working with Worktrees</h3>
+                    <p className="text-sm text-neutral-400 leading-relaxed mb-4">
+                      Multiple agents need isolated working directories. Git worktrees let each agent
+                      have its own checkout of the same repo without interfering with others.
+                    </p>
+                    <ol className="space-y-3 text-sm text-neutral-300">
+                      <li className="flex items-start gap-3">
+                        <span className="text-cyan-400 font-bold shrink-0">1.</span>
+                        <div>
+                          Clone the repo as a bare repository inside a dedicated folder:
+                          <div className="mt-1.5 space-y-1">
+                            <code className="block px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                              mkdir my-project-wt && cd my-project-wt
+                            </code>
+                            <code className="block px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                              git clone --bare &lt;repo-url&gt; .git
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-cyan-400 font-bold shrink-0">2.</span>
+                        <div>
+                          Create worktrees for each agent — one architect, multiple developers:
+                          <div className="mt-1.5 space-y-1">
+                            <code className="block px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                              git worktree add ./architect-1 -b architect-1
+                            </code>
+                            <code className="block px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                              git worktree add ./worker-1 -b worker-1
+                            </code>
+                            <code className="block px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                              git worktree add ./worker-2 -b worker-2
+                            </code>
+                          </div>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-cyan-400 font-bold shrink-0">3.</span>
+                        <div>
+                          Start a Claude Code session in each worktree with permissions bypassed:
+                          <code className="block mt-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-cyan-400 font-mono text-xs">
+                            cd worker-1 && claude --dangerously-skip-permissions
+                          </code>
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-cyan-400 font-bold shrink-0">4.</span>
+                        <span>
+                          Use <code className="text-emerald-400 font-mono text-xs">/kf-architect</code> in the architect worktree to plan tracks.
+                          Use <code className="text-emerald-400 font-mono text-xs">/kf-developer &lt;track-id&gt;</code> in each worker to implement them in parallel.
+                          Agents coordinate through the shared git history — the merge protocol handles contention.
+                        </span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                {/* Multi-threaded Guidance Sections */}
+                <div className="space-y-6">
+                  {multiThreadedSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                    >
+                      <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
+                      <div className="space-y-3">
+                        {section.paragraphs.map((p, i) => (
+                          <p key={i} className="text-sm text-neutral-400 leading-relaxed">{p}</p>
+                        ))}
+                      </div>
                     </div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {mode === "processor" && (
+              <motion.div
+                key="processor"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="space-y-6">
+                  {multiProcessorSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5"
+                    >
+                      <h3 className="text-lg font-bold mb-3 text-white">{section.title}</h3>
+                      <div className="space-y-3">
+                        {section.paragraphs.map((p, i) => (
+                          <p key={i} className="text-sm text-neutral-400 leading-relaxed">{p}</p>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         {/* Context callout */}
@@ -355,64 +621,25 @@ export default function SkillsPage() {
           </div>
         </motion.div>
 
-        {/* All Skills Reference */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={stagger}
-        >
-          <motion.h2 variants={fadeIn} className="text-2xl font-bold tracking-tight mb-8">
-            All Skills
-          </motion.h2>
-
-          <div className="space-y-6">
-            {skillCategories.map((cat) => (
-              <motion.div
-                key={cat.title}
-                variants={fadeIn}
-                className="glass-panel rounded-2xl border border-white/5 overflow-hidden"
-              >
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-white/5 bg-white/[0.02]">
-                  {cat.icon}
-                  <h3 className="font-semibold text-sm">{cat.title}</h3>
-                </div>
-                <div className="divide-y divide-white/5">
-                  {cat.skills.map((skill) => (
-                    <div key={skill.name} className="px-6 py-3.5 flex items-start gap-4 hover:bg-white/[0.02] transition-colors">
-                      <code className="text-emerald-400 text-sm font-mono shrink-0 pt-0.5">/{skill.name}</code>
-                      <p className="text-sm text-neutral-400">{skill.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Update & Uninstall */}
+        {/* All Skills Link */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           variants={fadeIn}
-          className="mt-16"
         >
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="glass-panel p-6 rounded-2xl border border-white/5">
-              <h3 className="font-semibold mb-2">Update</h3>
+          <Link
+            href="/skills/catalog/index.html"
+            className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all flex items-center justify-between group"
+          >
+            <div>
+              <h3 className="font-semibold text-white mb-1">Browse all 22 skills</h3>
               <p className="text-sm text-neutral-400">
-                Re-run the install command to pull the latest skills. Existing skills are overwritten with updated versions.
+                Full reference for every skill — getting started, architecture, development, quality, management, and advisors.
               </p>
             </div>
-            <div className="glass-panel p-6 rounded-2xl border border-white/5">
-              <h3 className="font-semibold mb-2">Uninstall</h3>
-              <p className="text-sm text-neutral-400">
-                Remove the skill directories:{" "}
-                <code className="text-xs bg-white/5 px-1.5 py-0.5 rounded">rm -rf ~/.claude/skills/kf-*</code>
-              </p>
-            </div>
-          </div>
+            <ArrowRight className="w-5 h-5 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0 ml-4" />
+          </Link>
         </motion.div>
       </main>
 
