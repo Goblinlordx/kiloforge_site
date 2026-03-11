@@ -82,7 +82,7 @@ const workflowSteps = [
     icon: <Play className="w-6 h-6" />,
     color: "indigo",
     description:
-      "Hand a track ID to the developer agent and it materializes the intent you provided — turning your approved spec into working reality. Multiple developers can run in parallel on independent tracks.",
+      "Hand a track ID to the developer agent. The track provides sufficiently narrow context — scoped specs, acceptance criteria, and a phased plan — to facilitate implementation with a low likelihood of hallucination. The agent materializes the intent you provided into working reality. Multiple developers can run in parallel on independent tracks.",
   },
 ];
 
