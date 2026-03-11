@@ -145,6 +145,7 @@ export default function Home() {
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
             <a href="#architecture" className="hover:text-white transition-colors">Architecture</a>
+            <Link href="/report" className="hover:text-white transition-colors">Status Report</Link>
             <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="text-white bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all border border-white/10">
               GitHub
             </a>
@@ -192,6 +193,13 @@ export default function Home() {
                 >
                   Architecture
                 </a>
+                <Link
+                  href="/report"
+                  className="hover:text-white transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Status Report
+                </Link>
                 <a
                   href="https://github.com/kiloforge/kiloforge"
                   target="_blank"
@@ -546,6 +554,7 @@ export default function Home() {
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Documentation</a>
+            <Link href="/report" className="hover:text-white transition-colors">Status Report</Link>
             <a href="https://github.com/kiloforge/kiloforge" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
             <Link href="/license" className="hover:text-white transition-colors">License</Link>
           </div>
