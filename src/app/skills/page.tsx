@@ -22,12 +22,43 @@ import {
 
 type Platform = "unix" | "windows";
 type Mode = "single" | "multi" | "processor";
+type AgentTool = "claude" | "opencode" | "amp" | "codex" | "antigravity";
 
-const installCommands: Record<Platform, string> = {
-  unix: "git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git /tmp/kf-skills && cp -r /tmp/kf-skills/kf-* ~/.claude/skills/ && rm -rf /tmp/kf-skills",
-  windows:
-    'git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git $env:TEMP\\kf-skills; Copy-Item -Recurse $env:TEMP\\kf-skills\\kf-* ~\\.claude\\skills\\; Remove-Item -Recurse -Force $env:TEMP\\kf-skills',
+const agentToolMeta: Record<AgentTool, { label: string; skillsDir: Record<Platform, string>; docUrl: string }> = {
+  claude: {
+    label: "Claude Code",
+    skillsDir: { unix: "~/.claude/skills/", windows: "$HOME\\.claude\\skills\\" },
+    docUrl: "https://docs.anthropic.com/en/docs/claude-code/overview",
+  },
+  opencode: {
+    label: "OpenCode",
+    skillsDir: { unix: "~/.config/opencode/skills/", windows: "$HOME\\.config\\opencode\\skills\\" },
+    docUrl: "https://github.com/opencode-ai/opencode",
+  },
+  amp: {
+    label: "Amp",
+    skillsDir: { unix: "~/.config/amp/skills/", windows: "$HOME\\.config\\amp\\skills\\" },
+    docUrl: "https://ampcode.com",
+  },
+  codex: {
+    label: "Codex",
+    skillsDir: { unix: "~/.agents/skills/", windows: "$HOME\\.agents\\skills\\" },
+    docUrl: "https://github.com/openai/codex",
+  },
+  antigravity: {
+    label: "Antigravity",
+    skillsDir: { unix: "~/.gemini/antigravity/skills/", windows: "$HOME\\.gemini\\antigravity\\skills\\" },
+    docUrl: "https://github.com/AidenYuanDev/antigravity",
+  },
 };
+
+function getInstallCommand(agent: AgentTool, platform: Platform): string {
+  const dir = agentToolMeta[agent].skillsDir[platform];
+  if (platform === "unix") {
+    return `SKILLS_DIR="${dir}" && rm -rf "$SKILLS_DIR"/kf-* && git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git /tmp/kf-skills && cp -r /tmp/kf-skills/kf-* "$SKILLS_DIR" && rm -rf /tmp/kf-skills`;
+  }
+  return `$d="${dir}"; Remove-Item "$d\\kf-*" -Recurse -Force -EA 0; git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git $env:TEMP\\kf-skills; Copy-Item $env:TEMP\\kf-skills\\kf-* $d\\ -Recurse; Remove-Item $env:TEMP\\kf-skills -Recurse -Force`;
+}
 
 const platformMeta: Record<Platform, { icon: React.ReactNode; label: string }> = {
   unix: { icon: <TerminalSquare className="w-4 h-4" />, label: "macOS / Linux" },
