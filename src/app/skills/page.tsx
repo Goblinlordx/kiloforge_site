@@ -328,7 +328,8 @@ export default function SkillsPage() {
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Skills</span>
           </motion.h1>
           <motion.p variants={fadeIn} className="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            22 Claude Code skills that turn your terminal into an AI-powered development platform.
+            21 skills that turn your terminal into an AI-powered development platform.
+            Works with Claude Code, OpenCode, Amp, Codex, and Antigravity.
             The same skills used to build Kiloforge itself — from a blank repo to 80,000+ lines of code in 5 days.
           </motion.p>
         </motion.div>
@@ -671,7 +672,7 @@ export default function SkillsPage() {
             <div className="relative z-10">
               <h3 className="text-xl font-bold mb-3">Skills-only or full platform</h3>
               <p className="text-neutral-400 leading-relaxed max-w-3xl">
-                These skills work standalone in any Claude Code session — this is exactly how Kiloforge itself was built.
+                These skills work standalone in any supported agent session — this is exactly how Kiloforge itself was built.
                 For teams scaling to many parallel agents, the full{" "}
                 <Link href="/index.html" className="text-emerald-400 hover:underline">Kiloforge platform</Link>{" "}
                 adds a local control plane (Cortex), a real-time dashboard (Command Deck), and agent lifecycle management
@@ -693,7 +694,7 @@ export default function SkillsPage() {
             className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all flex items-center justify-between group"
           >
             <div>
-              <h3 className="font-semibold text-white mb-1">Browse all 22 skills</h3>
+              <h3 className="font-semibold text-white mb-1">Browse all 21 skills</h3>
               <p className="text-sm text-neutral-400">
                 Full reference for every skill — getting started, architecture, development, quality, management, and advisors.
               </p>

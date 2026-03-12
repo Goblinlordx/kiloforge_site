@@ -56,7 +56,6 @@ const skillCategories = [
     title: "Review & Quality",
     icon: <Search className="w-5 h-5 text-amber-400" />,
     skills: [
-      { name: "kf-reviewer", desc: "Review PRs against track specs" },
       { name: "kf-validate", desc: "Validate project artifact consistency" },
       { name: "kf-data-guardian", desc: "Data integrity guard (embedded)" },
       { name: "kf-merge-protocol", desc: "Merge protocol reference (embedded)" },
@@ -116,7 +115,7 @@ export default function SkillsCatalogPage() {
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Catalog</span>
           </motion.h1>
           <motion.p variants={fadeIn} className="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            Full reference for all 22 skills — organized by workflow stage.
+            Full reference for all 21 skills — organized by workflow stage.
           </motion.p>
         </motion.div>
 
