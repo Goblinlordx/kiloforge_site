@@ -283,6 +283,7 @@ function WorkflowFlow() {
 
 export default function SkillsPage() {
   const [platform, setPlatform] = useState<Platform>("unix");
+  const [agentTool, setAgentTool] = useState<AgentTool>("claude");
   const [copied, setCopied] = useState(false);
   const [mode, setMode] = useState<Mode>("single");
 
@@ -338,8 +339,8 @@ export default function SkillsPage() {
             <h2 className="text-2xl font-bold tracking-tight mb-2">Install</h2>
             <p className="text-sm text-neutral-400 mb-6">
               Requires{" "}
-              <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
-                Claude Code
+              <a href={agentToolMeta[agentTool].docUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
+                {agentToolMeta[agentTool].label}
               </a>{" "}
               and{" "}
               <a href="https://git-scm.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
@@ -348,33 +349,61 @@ export default function SkillsPage() {
               .
             </p>
 
+            {/* Agent Tool Selector */}
+            <div className="mb-4">
+              <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Agent Tool</label>
+              <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 w-fit">
+                {(["claude", "opencode", "amp", "codex", "antigravity"] as AgentTool[]).map((a) => (
+                  <button
+                    key={a}
+                    onClick={() => setAgentTool(a)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      agentTool === a
+                        ? "bg-white/10 text-white border border-white/15 shadow-sm"
+                        : "text-neutral-400 hover:text-neutral-200 border border-transparent"
+                    }`}
+                  >
+                    <span>{agentToolMeta[a].label}</span>
+                  </button>
+                ))}
+              </div>
+              {(agentTool === "opencode" || agentTool === "amp") && (
+                <p className="text-xs text-neutral-500 mt-2">
+                  {agentToolMeta[agentTool].label} also reads from <code className="text-emerald-400/70 font-mono">~/.claude/skills/</code>
+                </p>
+              )}
+            </div>
+
             {/* Platform Tabs */}
-            <div className="flex items-center gap-1 mb-4 p-1 rounded-xl bg-white/5 border border-white/10 w-fit">
-              {(["unix", "windows"] as Platform[]).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPlatform(p)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    platform === p
-                      ? "bg-white/10 text-white border border-white/15 shadow-sm"
-                      : "text-neutral-400 hover:text-neutral-200 border border-transparent"
-                  }`}
-                >
-                  {platformMeta[p].icon}
-                  <span>{platformMeta[p].label}</span>
-                </button>
-              ))}
+            <div className="mb-4">
+              <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Platform</label>
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 w-fit">
+                {(["unix", "windows"] as Platform[]).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPlatform(p)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      platform === p
+                        ? "bg-white/10 text-white border border-white/15 shadow-sm"
+                        : "text-neutral-400 hover:text-neutral-200 border border-transparent"
+                    }`}
+                  >
+                    {platformMeta[p].icon}
+                    <span>{platformMeta[p].label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Command */}
             <div className="relative group">
               <pre className="glass-panel px-6 py-4 pr-14 rounded-xl flex items-center gap-3 text-sm font-mono text-neutral-300 border border-white/10 shadow-2xl overflow-hidden">
                 <span className="text-emerald-400 shrink-0">{platform === "windows" ? ">" : "$"}</span>
-                <span className="whitespace-nowrap overflow-x-auto">{installCommands[platform]}</span>
+                <span className="whitespace-nowrap overflow-x-auto">{getInstallCommand(agentTool, platform)}</span>
               </pre>
               <div className="absolute right-12 top-0 bottom-0 w-10 bg-gradient-to-r from-transparent to-white/[0.04] pointer-events-none rounded-r-xl" />
               <button
-                onClick={() => copyToClipboard(installCommands[platform])}
+                onClick={() => copyToClipboard(getInstallCommand(agentTool, platform))}
                 className="absolute right-0 top-0 bottom-0 flex items-center px-3 rounded-r-xl bg-white/[0.04] hover:bg-white/[0.08] text-neutral-400 hover:text-white transition-all border-l border-white/10"
                 aria-label="Copy to clipboard"
               >
