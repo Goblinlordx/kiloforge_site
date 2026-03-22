@@ -30,7 +30,6 @@ const skillCategories = [
     skills: [
       { name: "kf-getting-started", desc: "Interactive project bootstrapper" },
       { name: "kf-setup", desc: "Initialize project metadata and track registry" },
-      { name: "kf-interactive", desc: "General-purpose kf-aware assistant" },
     ],
   },
   {
@@ -38,8 +37,7 @@ const skillCategories = [
     icon: <Layers className="w-5 h-5 text-cyan-400" />,
     skills: [
       { name: "kf-architect", desc: "Research codebase, create track specs" },
-      { name: "kf-new-track", desc: "Create a single track with spec and plan" },
-      { name: "kf-dispatch", desc: "AI swarm dispatcher for worker assignment" },
+      { name: "kf-conductor", desc: "Tmux-based multi-agent orchestration and auto-dispatch" },
     ],
   },
   {
@@ -47,7 +45,6 @@ const skillCategories = [
     icon: <GitBranch className="w-5 h-5 text-indigo-400" />,
     skills: [
       { name: "kf-developer", desc: "Implement a track end-to-end" },
-      { name: "kf-implement", desc: "Execute individual tasks from a plan" },
       { name: "kf-conflict-resolver", desc: "Resolve git merge conflicts" },
       { name: "kf-revert", desc: "Undo by track, phase, or task" },
     ],
@@ -57,8 +54,6 @@ const skillCategories = [
     icon: <Search className="w-5 h-5 text-amber-400" />,
     skills: [
       { name: "kf-validate", desc: "Validate project artifact consistency" },
-      { name: "kf-data-guardian", desc: "Data integrity guard (embedded)" },
-      { name: "kf-merge-protocol", desc: "Merge protocol reference (embedded)" },
     ],
   },
   {
@@ -68,14 +63,14 @@ const skillCategories = [
       { name: "kf-status", desc: "Project status with dependency ordering" },
       { name: "kf-manage", desc: "Archive, restore, delete, rename tracks" },
       { name: "kf-report", desc: "Timeline, velocity, and cost reports" },
-      { name: "kf-bulk-archive", desc: "Archive all completed tracks" },
-      { name: "kf-compact-archive", desc: "Clean up archived track directories" },
     ],
   },
   {
-    title: "Advisors & Repair",
+    title: "Tooling & Repair",
     icon: <Wrench className="w-5 h-5 text-purple-400" />,
     skills: [
+      { name: "kf-bin", desc: "CLI tools reference and shared documentation hub" },
+      { name: "kf-update", desc: "Update skill definitions and CLI tools from latest release" },
       { name: "kf-advisor-product", desc: "Product strategy and competitive analysis" },
       { name: "kf-advisor-reliability", desc: "Codebase reliability audit" },
       { name: "kf-repair", desc: "System integrity audit and repair" },
@@ -115,7 +110,7 @@ export default function SkillsCatalogPage() {
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Catalog</span>
           </motion.h1>
           <motion.p variants={fadeIn} className="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            Full reference for all 21 skills — organized by workflow stage.
+            Full reference for all 16 skills — organized by workflow stage.
           </motion.p>
         </motion.div>
 

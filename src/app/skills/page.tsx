@@ -52,12 +52,11 @@ const agentToolMeta: Record<AgentTool, { label: string; skillsDir: Record<Platfo
   },
 };
 
-function getInstallCommand(agent: AgentTool, platform: Platform): string {
-  const dir = agentToolMeta[agent].skillsDir[platform];
+function getInstallCommand(_agent: AgentTool, platform: Platform): string {
   if (platform === "unix") {
-    return `SKILLS_DIR="${dir}" && rm -rf "$SKILLS_DIR"/kf-* && git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git /tmp/kf-skills && cp -r /tmp/kf-skills/kf-* "$SKILLS_DIR" && rm -rf /tmp/kf-skills`;
+    return `curl -fsSL https://raw.githubusercontent.com/Kiloforge/kiloforge-skills/main/install.sh | sh`;
   }
-  return `$d="${dir}"; Remove-Item "$d\\kf-*" -Recurse -Force -EA 0; git clone --depth 1 https://github.com/Kiloforge/kiloforge-skills.git $env:TEMP\\kf-skills; Copy-Item $env:TEMP\\kf-skills\\kf-* $d\\ -Recurse; Remove-Item $env:TEMP\\kf-skills -Recurse -Force`;
+  return `irm https://raw.githubusercontent.com/Kiloforge/kiloforge-skills/main/install.ps1 | iex`;
 }
 
 const platformMeta: Record<Platform, { icon: React.ReactNode; label: string }> = {
@@ -328,7 +327,7 @@ export default function SkillsPage() {
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Skills</span>
           </motion.h1>
           <motion.p variants={fadeIn} className="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            21 skills that turn your terminal into an AI-powered development platform.
+            16 skills that turn your terminal into an AI-powered development platform.
             Works with Claude Code, OpenCode, Amp, Codex, and Antigravity.
             The same skills used to build Kiloforge itself — from a blank repo to 80,000+ lines of code in 5 days.
           </motion.p>
@@ -694,9 +693,9 @@ export default function SkillsPage() {
             className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all flex items-center justify-between group"
           >
             <div>
-              <h3 className="font-semibold text-white mb-1">Browse all 21 skills</h3>
+              <h3 className="font-semibold text-white mb-1">Browse all 16 skills</h3>
               <p className="text-sm text-neutral-400">
-                Full reference for every skill — getting started, architecture, development, quality, management, and advisors.
+                Full reference for every skill — getting started, architecture, development, quality, management, and tooling.
               </p>
             </div>
             <ArrowRight className="w-5 h-5 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0 ml-4" />
